@@ -182,8 +182,17 @@ namespace E_project_Insu.Controllers
         public IActionResult EditPolicy(Policy policy)
         {
             if (!IsAdmin()) return RedirectToAction("Login", "Home");
+            
+            ModelState.Remove("User");
+            ModelState.Remove("ImageUrl"); // In case it's null, we might not want to update it if it's already there? No, we set hidden field. But if existing logic expects it. Let's be safe.
+            // Actually, hidden ImageUrl handles the value passing correctly. But let's remove User navigation property validation.
+
             if (ModelState.IsValid)
             {
+                // To be safe, let's fetch existing and update only what we want, OR just rely on the completed model.
+                // The provided code used Update(policy). 
+                // Let's stick to the user's pattern but remove validation.
+
                 _context.Policies.Update(policy);
                 _context.SaveChanges();
                 return RedirectToAction("Policies");
