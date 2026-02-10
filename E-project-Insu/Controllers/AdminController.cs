@@ -162,8 +162,8 @@ namespace E_project_Insu.Controllers
                     existing.FirstName = user.FirstName;
                     existing.LastName = user.LastName;
                     existing.Email = user.Email;
-                    existing.Phone = user.Phone;
-                    existing.Address = user.Address;
+                    // existing.Phone = user.Phone; // Not in model
+                    // existing.Address = user.Address; // Not in model
                     existing.Role = user.Role;
                     // Don't update Password or CreatedDate unless needed
                     
