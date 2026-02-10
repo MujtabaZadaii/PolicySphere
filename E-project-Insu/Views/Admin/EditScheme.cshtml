@@ -21,6 +21,8 @@
     <div class="bg-[#0A0A0A] border border-white/5 rounded-2xl p-8 md:p-12 intro-animate opacity-0 delay-100">
         <form asp-action="EditScheme" asp-route-id="@Model.SchemeId" method="post" enctype="multipart/form-data" class="space-y-8">
             <input type="hidden" asp-for="SchemeId" />
+            <input type="hidden" asp-for="ImageUrl" />
+            <input type="hidden" asp-for="CreatedDate" />
             
             <!-- Scheme Name -->
             <div>

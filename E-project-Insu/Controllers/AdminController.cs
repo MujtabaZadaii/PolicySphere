@@ -244,7 +244,6 @@ namespace E_project_Insu.Controllers
         }
 
         [HttpPost]
-        [HttpPost]
         public async Task<IActionResult> AddScheme(Scheme scheme, IFormFile schemeImage)
         {
             if (!IsAdmin()) return RedirectToAction("Login", "Home");
