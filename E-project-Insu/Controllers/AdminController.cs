@@ -292,6 +292,10 @@ namespace E_project_Insu.Controllers
         public async Task<IActionResult> EditScheme(Scheme scheme, IFormFile schemeImage)
         {
             if (!IsAdmin()) return RedirectToAction("Login", "Home");
+            
+            // We don't want to validate CreatedDate from the form submission as we keep the original
+            ModelState.Remove("CreatedDate");
+
             if (ModelState.IsValid)
             {
                 var existing = _context.Schemes.Find(scheme.SchemeId);

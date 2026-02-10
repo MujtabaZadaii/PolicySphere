@@ -35,10 +35,8 @@ namespace E_project_Insu.Models
         [Key]
         public int SchemeId { get; set; }
 
-        [Required]
         public string SchemeName { get; set; }
 
-        [Required]
         public string InsuranceType { get; set; } // Life, Medical, Motor, Home
 
         public string? Description { get; set; }
