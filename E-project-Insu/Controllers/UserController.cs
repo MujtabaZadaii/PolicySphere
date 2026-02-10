@@ -152,6 +152,15 @@ namespace E_project_Insu.Controllers
 
             ViewBag.RecentActivity = activities.OrderByDescending(a => a.Date).Take(3).ToList();
 
+            // 5. DB Notifications
+            var dbNotifications = await _context.Notifications
+                .Where(n => n.UserId == userId || n.UserId == null) // Targeted or Global
+                .OrderByDescending(n => n.CreatedDate)
+                .Take(5)
+                .ToListAsync();
+            
+            ViewBag.Notifications = dbNotifications;
+
             return View();
         }
 

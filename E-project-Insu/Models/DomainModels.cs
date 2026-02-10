@@ -139,6 +139,10 @@ namespace E_project_Insu.Models
         public bool IsRead { get; set; } = false;
 
         public string Link { get; set; } // URL to the relevant action
+
+        // Foreign Key (Optional: Null means Global Notification)
+        public int? UserId { get; set; }
+        public virtual User? User { get; set; }
     }
     public class Inquiry
     {

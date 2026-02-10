@@ -251,29 +251,7 @@ namespace E_project_Insu.Controllers
             return RedirectToAction("Policies");
         }
 
-        public IActionResult ApprovePolicy(int id)
-        {
-            if (!IsAdmin()) return RedirectToAction("Login", "Home");
-            var policy = _context.Policies.Find(id);
-            if (policy != null)
-            {
-                policy.Status = "Awaiting Payment";
-                _context.SaveChanges();
-            }
-            return RedirectToAction("Policies");
-        }
 
-        public IActionResult RejectPolicy(int id)
-        {
-            if (!IsAdmin()) return RedirectToAction("Login", "Home");
-            var policy = _context.Policies.Find(id);
-            if (policy != null)
-            {
-                policy.Status = "Rejected";
-                _context.SaveChanges();
-            }
-            return RedirectToAction("Policies");
-        }
 
         public IActionResult Schemes()
         {
@@ -407,15 +385,76 @@ namespace E_project_Insu.Controllers
             return View(loans);
         }
 
+        public IActionResult ApprovePolicy(int id)
+        {
+            if (!IsAdmin()) return RedirectToAction("Login", "Home");
+            var policy = _context.Policies.Include(p => p.User).FirstOrDefault(p => p.PolicyId == id);
+            if (policy != null)
+            {
+                policy.Status = "Awaiting Payment";
+                
+                // Notify User
+                _context.Notifications.Add(new Notification {
+                     Title = "Policy Approved",
+                     Message = $"Your policy {policy.PolicyNumber} has been approved. Please proceed to payment.",
+                     Type = "Success",
+                     UserId = policy.UserId,
+                     Link = "/User/PayPremium?policyId=" + policy.PolicyId
+                });
+
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Policies");
+        }
+
+        public IActionResult RejectPolicy(int id)
+        {
+            if (!IsAdmin()) return RedirectToAction("Login", "Home");
+            var policy = _context.Policies.FirstOrDefault(p => p.PolicyId == id); // UserId is FK so existing without Include might be enough for Id, but better be safe
+            if (policy != null)
+            {
+                policy.Status = "Rejected";
+
+                 // Notify User
+                _context.Notifications.Add(new Notification {
+                     Title = "Policy Rejected",
+                     Message = $"Your policy {policy.PolicyNumber} has been rejected.",
+                     Type = "Alert",
+                     UserId = policy.UserId,
+                     Link = "/User/MyPolicies"
+                });
+
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Policies");
+        }
+        
+        // ... Schemes ... (Omitted from replace range if not needed, but I need to be careful with replace range)
+        // I will target specific blocks instead.
+
+        // ...
+
         [HttpPost]
         public IActionResult UpdateLoanStatus(int loanId, string status)
         {
             if (!IsAdmin()) return RedirectToAction("Login", "Home");
             
-            var loan = _context.Loans.Find(loanId);
+            var loan = _context.Loans.Include(l => l.Policy).FirstOrDefault(l => l.LoanId == loanId);
             if (loan != null)
             {
                 loan.LoanStatus = status;
+
+                 // Notify User
+                if (loan.Policy != null) {
+                     _context.Notifications.Add(new Notification {
+                         Title = "Loan Update",
+                         Message = $"Your loan status for Policy {loan.Policy.PolicyNumber} is now: {status}.",
+                         Type = "Info",
+                         UserId = loan.Policy.UserId,
+                         Link = "/User/MyLoans"
+                     });
+                }
+
                 _context.SaveChanges();
             }
             return RedirectToAction("Loans");
@@ -429,11 +468,12 @@ namespace E_project_Insu.Controllers
             return View(payments);
         }
 
+
         public IActionResult VerifyPayment(int id)
         {
             if (!IsAdmin()) return RedirectToAction("Login", "Home");
             
-            var payment = _context.Payments.Include(p => p.Policy).FirstOrDefault(p => p.PaymentId == id);
+            var payment = _context.Payments.Include(p => p.Policy).ThenInclude(pol => pol.User).FirstOrDefault(p => p.PaymentId == id);
             
             if (payment != null && payment.PaymentStatus == "Pending")
             {
@@ -444,6 +484,50 @@ namespace E_project_Insu.Controllers
                 if (payment.Policy != null && payment.Policy.Status == "Awaiting Payment")
                 {
                     payment.Policy.Status = "Active";
+                }
+
+                // 3. Notify User
+                if (payment.Policy?.UserId != null)
+                {
+                    var notification = new Notification
+                    {
+                        Title = "Payment Verified",
+                        Message = $"Your payment of {payment.Amount:C} for Policy {payment.Policy.PolicyNumber} has been verified.",
+                        Type = "Success",
+                        UserId = payment.Policy.UserId,
+                        Link = "/User/MyPolicies"
+                    };
+                    _context.Notifications.Add(notification);
+                }
+
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Payments");
+        }
+
+        public IActionResult RejectPayment(int id)
+        {
+            if (!IsAdmin()) return RedirectToAction("Login", "Home");
+            
+            var payment = _context.Payments.Include(p => p.Policy).ThenInclude(pol => pol.User).FirstOrDefault(p => p.PaymentId == id);
+            
+            if (payment != null && payment.PaymentStatus == "Pending")
+            {
+                // 1. Mark Payment as Rejected
+                payment.PaymentStatus = "Rejected";
+
+                // 2. Notify User
+                if (payment.Policy?.UserId != null)
+                {
+                    var notification = new Notification
+                    {
+                        Title = "Payment Rejected",
+                        Message = $"Your payment of {payment.Amount:C} for Policy {payment.Policy.PolicyNumber} was rejected. Please contact support or try again.",
+                        Type = "Warning", // Or Alert
+                        UserId = payment.Policy.UserId,
+                        Link = "/User/CheckStatus" // Or wherever makes sense
+                    };
+                    _context.Notifications.Add(notification);
                 }
 
                 _context.SaveChanges();
