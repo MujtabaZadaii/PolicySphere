@@ -1,0 +1,60 @@
+@model IEnumerable<E_project_Insu.Models.Insight>
+
+@{
+    ViewData["Title"] = "Manage Insights";
+}
+
+<div class="p-8">
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="text-3xl font-display font-bold text-white mb-2">Insights & Updates</h1>
+            <p class="text-gray-400">Manage news, updates, and articles.</p>
+        </div>
+        <a asp-action="AddInsight" class="bg-accent text-white px-6 py-2 rounded-full font-medium hover:bg-accent/80 transition-colors">
+            + New Insight
+        </a>
+    </div>
+
+    <!-- Table -->
+    <div class="bg-panel border border-white/10 rounded-2xl overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-white/5 border-b border-white/10 text-gray-400 text-xs uppercase tracking-wider">
+                        <th class="p-6 font-medium">Title</th>
+                        <th class="p-6 font-medium">Category</th>
+                        <th class="p-6 font-medium">Status</th>
+                        <th class="p-6 font-medium">Published</th>
+                        <th class="p-6 font-medium text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5">
+                    @foreach (var item in Model)
+                    {
+                        <tr class="hover:bg-white/5 transition-colors group">
+                            <td class="p-6 text-white font-medium">@item.Title</td>
+                            <td class="p-6 text-gray-400">@item.Category</td>
+                            <td class="p-6">
+                                <span class="px-3 py-1 rounded-full text-xs font-medium border border-white/10 
+                                      @(item.Status == "Active" ? "bg-green-500/10 text-green-400 border-green-500/20" : "bg-gray-500/10 text-gray-400 border-gray-500/20")">
+                                    @item.Status
+                                </span>
+                            </td>
+                            <td class="p-6 text-gray-400 text-sm">@item.PublishedDate.ToString("MMM dd, yyyy")</td>
+                            <td class="p-6 text-right">
+                                <a asp-action="EditInsight" asp-route-id="@item.InsightId" class="text-accent hover:text-white mr-4 transition-colors">Edit</a>
+                                <a asp-action="DeleteInsight" asp-route-id="@item.InsightId" class="text-red-500 hover:text-white transition-colors" onclick="return confirm('Are you sure?')">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @if (!Model.Any())
+        {
+            <div class="p-12 text-center text-gray-500">
+                No insights found.
+            </div>
+        }
+    </div>
+</div>

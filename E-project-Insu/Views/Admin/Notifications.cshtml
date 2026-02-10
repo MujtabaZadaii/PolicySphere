@@ -1,0 +1,76 @@
+@model List<E_project_Insu.Models.Notification>
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+<div class="px-6 py-6 w-full max-w-[1000px] mx-auto min-h-screen">
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-3xl font-display font-light text-white">Notifications</h1>
+            <p class="text-gray-400 text-sm mt-1">System alerts and updates</p>
+        </div>
+        <div class="text-sm text-gray-500">
+            @(Model?.Count ?? 0) Total
+        </div>
+    </div>
+
+    <!-- Notification List -->
+    <div class="space-y-4">
+        @if (Model != null && Model.Count > 0)
+        {
+            @foreach (var note in Model)
+            {
+                <div class="bg-[#111] border border-white/5 rounded-xl p-4 flex items-start gap-4 group transition-colors hover:bg-white/5 @(note.IsRead ? "opacity-60" : "border-l-4 border-l-accent")">
+                    <!-- Icon based on logic/type if we had it, using generic for now -->
+                     <div class="mt-1 w-10 h-10 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0 text-gray-400 group-hover:text-accent transition-colors">
+                        @if (note.Title.Contains("Payment"))
+                        {
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        }
+                        else if (note.Title.Contains("Loan"))
+                        {
+                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        }
+                        else
+                        {
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                        }
+                    </div>
+
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start">
+                            <h3 class="text-white font-medium text-sm @(note.IsRead ? "text-gray-400" : "")">@note.Title</h3>
+                            <span class="text-[10px] text-gray-600 font-mono whitespace-nowrap ml-4">@note.CreatedDate.ToString("MMM dd, HH:mm")</span>
+                        </div>
+                        <p class="text-gray-500 text-xs mt-1 leading-relaxed">@note.Message</p>
+                        
+                        <div class="mt-3 flex gap-3">
+                            @if (!string.IsNullOrEmpty(note.Link))
+                            {
+                                <a href="@note.Link" class="text-[10px] uppercase font-bold text-accent hover:text-white transition-colors flex items-center gap-1">
+                                    View Details <span class="text-lg leading-none">›</span>
+                                </a>
+                            }
+                            @if (!note.IsRead)
+                            {
+                                <a href="@Url.Action("MarkNotificationRead", "Admin", new { id = note.NotificationId })" class="text-[10px] uppercase font-bold text-gray-600 hover:text-white transition-colors">
+                                    Mark as Read
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="text-center py-20">
+                <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-600">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+                </div>
+                <h3 class="text-gray-400 text-lg font-display">All Caught Up</h3>
+                <p class="text-gray-600 text-xs mt-2">No new notifications to display.</p>
+            </div>
+        }
+    </div>
+</div>

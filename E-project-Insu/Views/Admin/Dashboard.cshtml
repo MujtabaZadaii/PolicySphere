@@ -1,0 +1,321 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    decimal revenue = ViewBag.TotalRevenue ?? 0;
+    int users = ViewBag.TotalUsers;
+    int policies = ViewBag.TotalPolicies;
+    int pendingPolicies = ViewBag.PendingPolicies;
+    int pendingLoans = ViewBag.PendingLoans;
+}
+
+<div class="px-6 py-4 w-full max-w-[1400px] mx-auto">
+    
+    <!-- Top Header & Stats -->
+    <div class="flex flex-col xl:flex-row justify-between items-start xl:items-end mb-8 gap-6">
+        <div class="space-y-4 flex-1 w-full">
+            <h1 class="text-3xl md:text-4xl font-display font-light text-white tracking-tight">Welcome back, Admin</h1>
+            
+            <!-- Progress Pills -->
+            <div class="flex flex-wrap gap-3 items-center">
+                <div class="bg-white/5 rounded-full px-5 py-2 flex items-center gap-3 border border-white/5">
+                    <span class="text-xs text-gray-400">Policy Approval</span>
+                    <span class="text-white font-mono text-sm">85%</span>
+                </div>
+                <div class="bg-accent rounded-full px-5 py-2 flex items-center gap-3 text-white">
+                    <span class="text-xs font-medium">Loans Processed</span>
+                    <span class="font-bold font-mono text-sm">15%</span>
+                </div>
+                <div class="bg-white/5 rounded-full px-5 py-2 flex-1 border border-white/5 relative overflow-hidden h-[36px] flex items-center">
+                     <span class="relative z-10 text-xs text-gray-400 ml-4 flex items-center h-full">System Health: Stable</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Large Top Stats -->
+        <div class="flex gap-12 xl:mb-1">
+             <div class="text-center">
+                <div class="text-4xl font-display font-thin text-white mb-1">@users</div>
+                <div class="text-[10px] uppercase tracking-widest text-accent font-semibold">Total Users</div>
+            </div>
+            <div class="text-center">
+                <div class="text-4xl font-display font-thin text-white mb-1">@policies</div>
+                <div class="text-[10px] uppercase tracking-widest text-gray-500 font-semibold">Policies</div>
+            </div>
+             <div class="text-center">
+                <div class="text-4xl font-display font-thin text-white mb-1">@pendingPolicies</div>
+                <div class="text-[10px] uppercase tracking-widest text-gray-500 font-semibold">Pending</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Bento Grid -->
+    <div class="grid grid-cols-12 gap-5">
+        
+        <!-- 1. Profile Card (Left Large) -->
+        <div class="col-span-12 xl:col-span-3 bg-[#111] rounded-[2rem] relative overflow-hidden group min-h-[350px] flex flex-col justify-end p-6 border border-white/5">
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center grayscale group-hover:grayscale-0 transition-all duration-700 opacity-60"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+            
+            <div class="relative z-10">
+                <h2 class="text-2xl font-display text-white mb-0.5">Admin Panel</h2>
+                <div class="text-gray-400 text-xs mb-4">System Administrator</div>
+                <div class="inline-flex items-center px-3 py-1.5 bg-accent/20 backdrop-blur-md border border-accent/20 rounded-full text-white font-mono text-xs">
+                    @revenue.ToString("C0") Revenue
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Charts Column (Middle) -->
+        <div class="col-span-12 xl:col-span-6 grid grid-cols-2 gap-5">
+            
+            <!-- Progress / Activity Chart -->
+            <div class="bg-[#111] border border-white/5 rounded-[2rem] p-6 flex flex-col justify-between min-h-[250px] col-span-2 md:col-span-1">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-lg font-display text-white mb-1">Activity</h3>
+                        <!-- Calculate approx hours -->
+                        <div class="text-2xl font-bold text-white font-mono">@(((int[])ViewBag.ActivityData).Sum())<span class="text-sm text-gray-500 font-normal">h</span></div>
+                        <div class="text-[10px] text-gray-500 mt-1">Work Time this week</div>
+                    </div>
+                </div>
+
+                <!-- Real Data Bar Chart -->
+                <div class="flex items-end justify-between h-24 mt-4 gap-2">
+                    @{
+                        int[] activity = ViewBag.ActivityData as int[] ?? new int[] {0,0,0,0,0,0,0};
+                        string[] days = {"S","M","T","W","T","F","S"};
+                        int max = activity.Any() ? activity.Max() : 1;
+                        if(max == 0) max = 1;
+                    }
+                    @for(int i=0; i<7; i++)
+                    {
+                        var val = i < activity.Length ? activity[i] : 0;
+                        var height = (val / (double)max) * 100;
+                        bool isPeak = val == max && val > 0;
+                        <div class="w-1.5 @(isPeak ? "bg-accent shadow-[0_0_10px_#ac58e9]" : "bg-white/10") rounded-full relative group" style="height: @height%">
+                             @if(isPeak){
+                                <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-accent text-white text-[9px] font-bold px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Peak</div>
+                             }
+                        </div>
+                    }
+                </div>
+                <div class="flex justify-between text-[9px] text-gray-600 font-medium font-mono mt-3 border-t pt-2 border-white/5">
+                    @foreach(var d in days) { <span>@d</span> }
+                </div>
+            </div>
+
+            <!-- Time Tracker (Real Functional) -->
+            <div class="bg-[#151515] border border-white/5 rounded-[2rem] p-6 flex flex-col justify-between min-h-[250px] col-span-2 md:col-span-1 relative overflow-hidden" 
+                 x-data="{ 
+                    running: false, 
+                    seconds: 0, 
+                    interval: null,
+                    formatTime(sec) {
+                        const h = Math.floor(sec / 3600).toString().padStart(2, '0');
+                        const m = Math.floor((sec % 3600) / 60).toString().padStart(2, '0');
+                        const s = (sec % 60).toString().padStart(2, '0');
+                        return `${h}:${m}:${s}`;
+                    },
+                    toggle() {
+                        if (this.running) {
+                            clearInterval(this.interval);
+                            this.running = false;
+                        } else {
+                            this.interval = setInterval(() => { this.seconds++ }, 1000);
+                            this.running = true;
+                        }
+                    },
+                    reset() {
+                        clearInterval(this.interval);
+                        this.running = false;
+                        this.seconds = 0;
+                    }
+                 }">
+                
+                <div class="flex justify-between items-start relative z-10">
+                    <h3 class="text-base text-gray-400">Tracker</h3>
+                    <div class="w-2 h-2 rounded-full" :class="running ? 'bg-green-500 animate-pulse' : 'bg-gray-700'"></div>
+                </div>
+
+                <div class="relative flex items-center justify-center my-4 z-10">
+                    <!-- Timer Circle -->
+                    <svg class="w-32 h-32 transform -rotate-90">
+                        <circle cx="64" cy="64" r="56" stroke="rgba(255,255,255,0.05)" stroke-width="10" fill="transparent" />
+                        <circle cx="64" cy="64" r="56" stroke="#AC58E9" stroke-width="10" fill="transparent" class="transition-all duration-1000" 
+                                :stroke-dasharray="2 * Math.PI * 56" 
+                                :stroke-dashoffset="(2 * Math.PI * 56) - ((seconds % 60) / 60) * (2 * Math.PI * 56)" 
+                                stroke-linecap="round" />
+                    </svg>
+                    <div class="absolute text-center">
+                         <div class="text-xl font-bold text-white font-mono" x-text="formatTime(seconds)">00:00:00</div>
+                         <div class="text-[9px] text-gray-500 uppercase tracking-widest" x-text="running ? 'Tracking' : 'Paused'">Session</div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 relative z-10 justify-center">
+                    <button @@click="toggle()" class="w-8 h-8 rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform text-white" :class="running ? 'bg-red-500' : 'bg-accent'">
+                        <svg x-show="!running" class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        <svg x-show="running" class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                    </button>
+                    <button @@click="reset()" class="w-8 h-8 bg-white/5 border border-white/10 rounded-full flex items-center justify-center text-gray-400 hover:border-red-500 hover:text-red-500 transition-colors">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bottom Accordions (Pending Loans & Renewals) -->
+            <div class="col-span-2 bg-[#111] border border-white/5 rounded-[2rem] p-6 text-sm" x-data="{ activeTab: 'loans' }">
+                 <div class="flex border-b border-white/10 mb-4 pb-2 gap-4">
+                     <button @@click="activeTab = 'loans'" :class="activeTab === 'loans' ? 'text-white border-b-2 border-accent' : 'text-gray-500'" class="pb-1 transition-colors">Pending Loans</button>
+                     <button @@click="activeTab = 'renewals'" :class="activeTab === 'renewals' ? 'text-white border-b-2 border-accent' : 'text-gray-500'" class="pb-1 transition-colors">Expiring Policies</button>
+                 </div>
+
+                 <!-- Loans List -->
+                 <div x-show="activeTab === 'loans'" class="space-y-3">
+                     @if(ViewBag.PendingLoanList != null && ((IEnumerable<dynamic>)ViewBag.PendingLoanList).Any())
+                     {
+                         foreach(var loan in ViewBag.PendingLoanList)
+                         {
+                             <div class="flex justify-between items-center group">
+                                 <div class="flex items-center gap-3">
+                                     <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-xs text-accent font-bold">@loan.Policy.User.FirstName.Substring(0,1).ToUpper()</div>
+                                     <div>
+                                         <div class="text-white">@loan.Policy.User.FirstName @loan.Policy.User.LastName</div>
+                                         <div class="text-[10px] text-gray-500">Req: @loan.RequestedAmount.ToString("C0")</div>
+                                     </div>
+                                 </div>
+                                 <a href="@Url.Action("Loans", "Admin")" class="text-[10px] bg-accent/10 text-accent px-2 py-1 rounded hover:bg-accent hover:text-white transition-colors">Review</a>
+                             </div>
+                         }
+                     }
+                     else
+                     {
+                         <div class="text-center text-gray-600 text-xs py-2">No pending loans</div>
+                     }
+                 </div>
+
+                 <!-- Renewals List -->
+                 <div x-show="activeTab === 'renewals'" class="space-y-3" style="display: none;">
+                      @if(ViewBag.PolicyRenewals != null && ((IEnumerable<dynamic>)ViewBag.PolicyRenewals).Any())
+                      {
+                          foreach(var p in ViewBag.PolicyRenewals)
+                          {
+                             <div class="flex justify-between items-center group">
+                                 <div class="flex items-center gap-3">
+                                     <div class="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center text-xs text-red-500 font-bold">!</div>
+                                     <div>
+                                         <div class="text-white">@p.PolicyNumber</div>
+                                         <div class="text-[10px] text-gray-500">Expires: @p.EndDate.ToString("MMM dd")</div>
+                                     </div>
+                                 </div>
+                                 <a href="@Url.Action("Policies", "Admin")" class="text-[10px] bg-white/5 text-white px-2 py-1 rounded hover:bg-white/20 transition-colors">View</a>
+                             </div>
+                          }
+                      }
+                      else
+                      {
+                          <div class="text-center text-gray-600 text-xs py-2">No upcoming expirations</div>
+                      }
+                 </div>
+            </div>
+            
+            <!-- Calendar Strip (Right) -->
+             <div class="col-span-2 bg-[#151515] border border-white/5 rounded-[2rem] p-6 flex flex-col justify-between">
+                 <div class="flex justify-between items-center mb-4">
+                     <span class="text-[10px] bg-accent/20 border border-accent/20 px-2 py-0.5 rounded-full text-white font-bold">@DateTime.Now.ToString("MMM")</span>
+                     <span class="text-xs font-display text-gray-500">@DateTime.Now.ToString("MMMM yyyy")</span>
+                 </div>
+                 <div class="flex justify-between text-center gap-1">
+                     @for(int i=0; i<7; i++)
+                     {
+                         var date = DateTime.Now.AddDays(i - (int)DateTime.Now.DayOfWeek); // Start from Sunday
+                         bool isToday = date.Date == DateTime.Now.Date;
+                        <div class="flex flex-col gap-1 @(isToday ? "opacity-100" : "opacity-40")">
+                            <span class="text-[9px] font-mono text-gray-500">@date.ToString("ddd")</span>
+                            <span class="text-sm font-bold @(isToday ? "text-accent" : "text-white")">@date.Day</span>
+                            @if(isToday){ <div class="w-1 h-1 bg-accent rounded-full mx-auto shadow-[0_0_5px_#ac58e9]"></div> }
+                        </div>
+                     }
+                 </div>
+                 
+                 <div class="mt-4 bg-[#0A0A0A] border border-white/5 rounded-xl p-3 flex items-center gap-3 text-white">
+                     <div class="flex -space-x-2">
+                         <img src="/Admin%20Team/Hamza%20Nasir.jpeg" class="w-6 h-6 rounded-full border border-black object-cover" alt="Hamza" title="Hamza Nasir" />
+                         <img src="/Admin%20Team/Naveera.jpeg" class="w-6 h-6 rounded-full border border-black object-cover" alt="Naveera" title="Naveera" />
+                         <img src="/Admin%20Team/Zain.jpeg" class="w-6 h-6 rounded-full border border-black object-cover" alt="Zain" title="Zain" />
+                     </div>
+                     <div class="flex-1">
+                         <div class="text-[10px] font-bold">Team Sync</div>
+                         <div class="text-[9px] text-gray-500">Daily Standup</div>
+                     </div>
+                 </div>
+             </div>
+
+        </div>
+
+        <!-- 3. Right Column: Tasks (Real Functional) -->
+        <div class="col-span-12 xl:col-span-3">
+             <div class="bg-[#111] rounded-[2rem] p-6 h-full flex flex-col border border-white/5 relative overflow-hidden min-h-[500px]" x-data="{ addingTask: false }">
+                <div class="flex justify-between items-end mb-6 relative z-10">
+                    <div>
+                        <div class="text-white font-display text-lg mb-1">Tasks</div>
+                         @{
+                             var tasks = ViewBag.AdminTasks as IEnumerable<E_project_Insu.Models.AdminTask>;
+                             var pendingCount = tasks?.Count(t => !t.IsCompleted) ?? 0;
+                         }
+                        <div class="text-xs text-gray-400">@pendingCount Pending</div>
+                    </div>
+                </div>
+
+                <!-- Dark Task List -->
+                <div class="flex-1 space-y-3 relative z-10 overflow-y-auto custom-scrollbar pr-1 pb-4">
+                    @if(ViewBag.AdminTasks != null)
+                    {
+                        foreach(E_project_Insu.Models.AdminTask task in ViewBag.AdminTasks)
+                        {
+                             <div class="flex items-center gap-3 group p-2 rounded-lg transition-colors hover:bg-white/5 @(task.IsCompleted ? "opacity-50" : "")">
+                                <!-- Checkbox Form -->
+                                <form asp-action="ToggleTask" asp-route-id="@task.TaskId" method="post" class="flex-shrink-0">
+                                    <button type="submit" class="w-5 h-5 rounded border flex items-center justify-center transition-all @(task.IsCompleted ? "bg-accent border-accent" : "border-gray-600 hover:border-white")">
+                                        @if(task.IsCompleted) { <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> }
+                                    </button>
+                                </form>
+                                
+                                <div class="flex-1">
+                                    <div class="text-xs text-white line-clamp-2 @(task.IsCompleted ? "line-through text-gray-500" : "")">@task.Title</div>
+                                    <div class="text-[9px] text-gray-600">@task.Priority • @task.CreatedDate.ToString("MMM dd")</div>
+                                </div>
+
+                                <!-- Delete Link -->
+                                <a href="@Url.Action("DeleteTask", new { id = task.TaskId })" class="text-gray-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </a>
+                            </div>
+                        }
+                    }
+                </div>
+                
+                 <!-- Floating Add Button -->
+                 <div class="mt-auto border-t border-white/5 pt-4">
+                     <form x-show="addingTask" asp-action="AddTask" method="post" class="flex flex-col gap-2" @@submit="addingTask = false">
+                         <input type="text" name="title" placeholder="Task title..." class="w-full bg-black/20 border border-white/10 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-accent" required autoFocus />
+                         <div class="flex gap-2">
+                             <select name="priority" class="bg-black/20 border border-white/10 rounded px-2 py-1 text-[10px] text-gray-400 focus:outline-none">
+                                 <option value="High">High</option>
+                                 <option value="Medium" selected>Medium</option>
+                                 <option value="Low">Low</option>
+                             </select>
+                             <button type="submit" class="flex-1 bg-accent text-white rounded py-1 text-[10px] font-bold hover:bg-accent/80">Add</button>
+                             <button type="button" @@click="addingTask = false" class="px-2 bg-white/5 text-gray-400 rounded py-1 text-[10px] hover:bg-white/10">Cancel</button>
+                         </div>
+                     </form>
+
+                    <div x-show="!addingTask" class="flex justify-between items-center">
+                        <span class="text-[10px] text-gray-600">New Task</span>
+                        <button @@click="addingTask = true" class="w-6 h-6 bg-white/5 border border-white/10 rounded-full flex items-center justify-center text-white hover:bg-accent hover:border-accent hover:scale-110 transition-all text-sm">+</button>
+                    </div>
+                 </div>
+            </div>
+        </div>
+
+    </div>
+</div>

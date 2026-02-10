@@ -1,0 +1,255 @@
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    var firstName = Context.Session.GetString("UserFirstName") ?? "User";
+}
+
+<div class="p-6 md:p-10 w-full max-w-[1600px] mx-auto min-h-screen flex flex-col">
+    
+    <!-- Top Header -->
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-10 intro-animate opacity-0">
+        <div>
+            <h1 class="text-3xl md:text-5xl font-display font-medium text-white mb-2">Hello, @firstName!</h1>
+            <p class="text-gray-400 font-light tracking-wide">Here's your insurance overview for today.</p>
+        </div>
+        
+        <div class="mt-4 md:mt-0 flex items-center space-x-4">
+             <!-- Fake Search -->
+            <div class="relative hidden md:block group">
+                <input type="text" placeholder="Search policies..." class="bg-[#0A0A0A] border border-white/10 text-sm text-white px-4 py-2.5 rounded-full w-64 focus:outline-none focus:border-accent/50 transition-colors pl-10" />
+                <svg class="w-4 h-4 text-gray-500 absolute left-3.5 top-3 group-focus-within:text-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+            
+            <button class="bg-white text-black px-6 py-2.5 rounded-full font-medium hover:bg-gray-200 transition-colors text-sm flex items-center">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                Premium Member
+            </button>
+        </div>
+    </div>
+
+    <!-- Bento Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 flex-1">
+        
+        <!-- Hero Card (Span 2x2) -->
+        <div class="col-span-1 md:col-span-2 row-span-2 bg-[#0A0A0A] border border-white/5 rounded-[2rem] p-8 md:p-10 relative overflow-hidden group hover:border-accent/20 transition-all duration-500 intro-animate opacity-0">
+            <!-- Background Decoration -->
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=1974&auto=format&fit=crop')] bg-cover bg-center opacity-40 mix-blend-screen hover:scale-105 transition-transform duration-700"></div>
+            <div class="absolute top-0 right-0 w-full h-full bg-gradient-to-l from-black via-black/50 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black to-transparent"></div>
+
+            <div class="relative z-10 h-full flex flex-col justify-between">
+                <div>
+                    <span class="inline-block px-3 py-1 bg-white/10 text-white text-[10px] font-bold uppercase tracking-widest rounded-full mb-6 backdrop-blur-md border border-white/10">Overview</span>
+                    <h2 class="text-4xl md:text-5xl text-white font-display font-medium leading-tight mb-4 drop-shadow-2xl">
+                        Your Protection<br />
+                        <span class="text-gray-400">Starts Here.</span>
+                    </h2>
+                    <p class="text-gray-300 max-w-sm font-light leading-relaxed drop-shadow-md">
+                        You have <span class="text-white font-semibold">@ViewBag.ActivePolicies Active Policies</span> protecting your assets. Comprehensive coverage tailored to your lifestyle.
+                    </p>
+                </div>
+                
+                <div class="flex items-center space-x-2 mt-8">
+                     <!-- User Avatars -->
+                    <div class="flex -space-x-3">
+                         <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=100" class="w-10 h-10 rounded-full border-2 border-[#0A0A0A] object-cover" alt="User" />
+                         <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=100" class="w-10 h-10 rounded-full border-2 border-[#0A0A0A] object-cover" alt="Member" />
+                         <div class="w-10 h-10 rounded-full border-2 border-[#0A0A0A] bg-gray-700 flex items-center justify-center text-xs text-white">+</div>
+                    </div>
+                    <a asp-action="Policies" class="ml-4 pl-6 pr-2 py-2 bg-white text-black rounded-full flex items-center group/btn hover:bg-gray-200 transition-colors cursor-pointer shadow-lg shadow-white/5">
+                        <span class="font-medium mr-2">View Policies</span>
+                        <div class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center -mr-1 transition-transform group-hover/btn:translate-x-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Next Payment (Span 1x1) -->
+        <div class="col-span-1 border border-white/10 rounded-[2rem] p-8 flex flex-col relative group overflow-hidden h-[360px] transition-all duration-500 hover:shadow-[0_0_40px_rgba(172,88,233,0.1)] hover:border-accent/30 bg-[#050505]">
+            
+            <!-- Ambient Background -->
+            <div class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+            <div class="absolute -right-10 -top-10 w-40 h-40 bg-accent/20 rounded-full blur-[80px] group-hover:bg-accent/30 transition-all duration-700 pointer-events-none"></div>
+
+            <!-- Header -->
+            <div class="relative z-10 flex justify-between items-start mb-8">
+                <div class="w-14 h-14 rounded-2xl bg-[#111] border border-white/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-500 shadow-xl">
+                    <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div class="px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-md">
+                     <span class="text-[10px] text-gray-400 font-mono tracking-[0.2em] uppercase">Upcoming</span>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="relative z-10 flex-1 flex flex-col">
+               @if(ViewBag.UpcomingDues != null && ViewBag.UpcomingDues.Count > 0)
+               {
+                   <div class="overflow-y-auto h-full pr-2 custom-scrollbar space-y-4">
+                       @foreach(var due in ViewBag.UpcomingDues) 
+                       {
+                           <div class="group/item flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
+                               <div>
+                                   <div class="text-2xl text-white font-display font-medium leading-none mb-1">@due.DueDate.ToString("MMM dd")</div>
+                                   <div class="text-[10px] text-gray-500 uppercase tracking-wider font-medium">@due.Policy</div>
+                               </div>
+                               <div class="text-right">
+                                    <span class="inline-block text-[10px] font-bold tracking-widest px-2 py-1 rounded text-accent bg-accent/10 border border-accent/10">
+                                        @Math.Abs(due.DaysLeft) DAYS
+                                    </span>
+                               </div>
+                           </div>
+                       }
+                   </div>
+               }
+               else
+               {
+                   <div class="h-full flex flex-col justify-center items-center text-center opacity-50">
+                       <svg class="w-12 h-12 text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                       <h3 class="text-lg text-white font-display">All Clear</h3>
+                       <p class="text-gray-500 text-xs">No upcoming payments.</p>
+                   </div>
+               }
+            </div>
+        </div>
+
+        <!-- Alerts Center (Span 1x1) -->
+        <div class="col-span-1 border border-white/10 rounded-[2rem] p-8 flex flex-col relative group overflow-hidden h-[360px] transition-all duration-500 hover:shadow-[0_0_40px_rgba(172,88,233,0.1)] hover:border-accent/30 bg-[#050505]" x-data="{ show: true }">
+             
+             <!-- Ambient Background -->
+             <div class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+             <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-accent/20 rounded-full blur-[80px] group-hover:bg-accent/30 transition-all duration-700 pointer-events-none"></div>
+
+             <div class="relative z-10 flex justify-between items-start mb-8">
+                <div class="w-14 h-14 rounded-2xl bg-[#111] border border-white/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-500 shadow-xl">
+                    <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                </div>
+                <button @@click="show = false" x-show="show" class="group/btn relative px-3 py-1 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 transition-all overflow-hidden">
+                    <span class="relative z-10 text-[10px] text-gray-400 font-mono tracking-[0.2em] uppercase group-hover/btn:text-white transition-colors">Mark Read</span>
+                    <div class="absolute inset-0 bg-accent/20 transform -translate-x-full group-hover/btn:translate-x-0 transition-transform duration-300"></div>
+                </button>
+            </div>
+
+            <div class="relative z-10 flex-1 flex flex-col justify-center">
+                <template x-if="show">
+                    <div class="w-full">
+                        @if (ViewBag.Alerts != null && ViewBag.Alerts.Count > 0)
+                        {
+                            var latestAlert = ((List<dynamic>)ViewBag.Alerts).FirstOrDefault();
+                            if (latestAlert != null)
+                            {
+                                <div class="relative p-6 rounded-2xl bg-[#111] border border-white/10 shadow-2xl">
+                                     <div class="absolute -left-1 top-6 w-1 h-8 bg-accent rounded-r-full"></div>
+                                     <h3 class="text-sm font-bold text-white mb-2 pr-4">@latestAlert.Title</h3>
+                                     <p class="text-xs text-gray-400 leading-relaxed font-light">
+                                        @latestAlert.Message
+                                     </p>
+                                     @if(ViewBag.Alerts.Count > 1) {
+                                         <div class="mt-4 pt-4 border-t border-white/5 flex justify-between items-center">
+                                             <span class="text-[9px] text-gray-600 uppercase tracking-widest">More Updates</span>
+                                             <span class="text-xs text-white font-mono bg-white/10 px-2 py-0.5 rounded-full">+@(ViewBag.Alerts.Count - 1)</span>
+                                         </div>
+                                     }
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="text-center py-6">
+                                 <h3 class="text-4xl font-display text-white/10 mb-2">0</h3>
+                                 <p class="text-[10px] text-gray-600 uppercase tracking-widest">No New Alerts</p>
+                            </div>
+                        }
+                    </div>
+                </template>
+                
+                <template x-if="!show">
+                     <div class="text-center intro-animate">
+                         <div class="w-16 h-16 mx-auto bg-[#111] rounded-full flex items-center justify-center mb-4 border border-white/5 shadow-inner">
+                            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                         </div>
+                         <h3 class="text-lg text-white font-display mb-1">All Caught Up</h3>
+                         <p class="text-[10px] text-gray-500 uppercase tracking-widest">0 Pending Alerts</p>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Recent Activity Column (Span 1x2, or 2x1 bottom) -->
+        <div class="col-span-1 md:col-span-2 bg-[#111] border border-white/5 rounded-[2rem] p-8 intro-animate opacity-0 delay-200 flex flex-col overflow-hidden relative">
+             <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl text-white font-medium">Recent Activity</h3>
+                <a asp-action="PaymentHistory" class="text-xs text-gray-500 hover:text-white transition-colors">View All</a>
+            </div>
+            
+            <div class="space-y-4 flex-1 overflow-y-auto pr-2 custom-scrollbar">
+            <div class="space-y-4 flex-1 overflow-y-auto pr-2 custom-scrollbar">
+                @if (ViewBag.RecentActivity != null && ViewBag.RecentActivity.Count > 0)
+                {
+                    foreach (var activity in ViewBag.RecentActivity)
+                    {
+                        var isPayment = activity.Type == "Payment";
+                        var colorClass = isPayment ? "text-green-500 bg-green-500/10" : "text-purple-500 bg-purple-500/10";
+                        var iconPath = isPayment ? "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" : "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2";
+                        
+                        <div class="flex items-center justify-between p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-colors cursor-pointer group">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-full @colorClass flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="@iconPath"></path></svg>
+                                </div>
+                                <div>
+                                    <p class="text-white text-sm font-medium">@activity.Title</p>
+                                    <p class="text-xs text-gray-500">@activity.Subtitle</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-white text-sm font-mono">
+                                    @(isPayment ? "$" + activity.Amount.ToString("N2") : (activity.Type == "Loan" ? "$" + activity.Amount.ToString("N0") : ""))
+                                </p>
+                                <p class="text-[10px] text-gray-600">@activity.Date.ToString("MMM dd")</p>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center py-8 text-gray-500 text-sm">
+                        No recent activity found.
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    /* Custom Scrollbar for the list */
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.02);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        gsap.to(".intro-animate", { 
+            opacity: 1, 
+            y: 0, 
+            duration: 1.2, 
+            stagger: 0.1, 
+            ease: "power3.out" 
+        });
+    });
+</script>

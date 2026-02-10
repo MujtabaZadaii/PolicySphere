@@ -1,0 +1,491 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PolicySphere</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        black: '#000000',
+                        white: '#ffffff',
+                        accent: '#AC58E9', 
+                        primary: '#0f172a',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Oswald', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-100%)' },
+                        },
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'blob': 'blob 7s infinite',
+                        'marquee': 'marquee 25s linear infinite',
+                    },
+                }
+            }
+        }
+        
+        // Check local storage for theme
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Oswald:wght@500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* Hide scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        
+        .glass-nav {
+            background: rgba(0, 0, 0, 0); /* Fully transparent */
+            backdrop-filter: none;
+            /* border-bottom: 1px solid rgba(255, 255, 255, 0.05);  Removing border for pure transparency if requested, but let's keep it minimal or remove as per "transprint" request. User said "navbar ko transprint kro". I will remove background and blur. */
+        }
+    </style>
+</head>
+<body class="antialiased bg-gray-50 text-gray-900 dark:bg-black dark:text-white selection:bg-accent selection:text-white relative transition-colors duration-500"> 
+    
+    <!-- Global Dynamic Background Glow -->
+    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none opacity-0 dark:opacity-100 transition-opacity duration-700">
+        <div class="glow-blob absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] bg-accent/20 rounded-full blur-[120px] opacity-50 mix-blend-screen animate-blob"></div>
+        <div class="glow-blob-2 absolute top-1/4 left-3/4 w-[30vw] h-[30vw] bg-purple-900/30 rounded-full blur-[80px] opacity-40 mix-blend-screen animate-pulse-slow"></div>
+    </div>
+    <!-- Custom Minimal Navbar (Transparent) -->
+    <header class="fixed top-0 left-0 w-full z-50 px-6 py-4 transition-all duration-300" id="main-header">
+        <nav class="w-full">
+            <!-- Desktop Layout (Hidden on Mobile/Tablet) -->
+            <div class="hidden lg:grid grid-cols-3 items-center w-full">
+                <!-- Left: Navigation Links -->
+                <div class="flex justify-start items-center gap-8 text-sm font-medium tracking-widest uppercase text-white">
+                    <a asp-action="Index" asp-controller="Home" class="hover:text-accent transition-colors relative group">
+                        Home
+                        <span class="absolute -bottom-1 left-0 w-0 h-px bg-accent transition-all group-hover:w-full"></span>
+                    </a>
+                    <span class="opacity-30">/</span>
+                    <a asp-action="Index" asp-controller="Schemes" class="hover:text-accent transition-colors relative group">
+                        Schemes
+                        <span class="absolute -bottom-1 left-0 w-0 h-px bg-accent transition-all group-hover:w-full"></span>
+                    </a>
+                    <span class="opacity-30">/</span>
+                    <a asp-action="Services" asp-controller="Home" class="hover:text-accent transition-colors relative group">
+                        Services
+                        <span class="absolute -bottom-1 left-0 w-0 h-px bg-accent transition-all group-hover:w-full"></span>
+                    </a>
+                    <span class="opacity-30">/</span>
+                    <a asp-action="Contact" asp-controller="Home" class="hover:text-accent transition-colors relative group z-20">
+                        Contact
+                        <span class="absolute -bottom-1 left-0 w-0 h-px bg-accent transition-all group-hover:w-full"></span>
+                    </a>
+                </div>
+                
+                <!-- Center: Logo -->
+                <div class="flex justify-center">
+                    <a asp-action="Index" asp-controller="Home" class="group relative inline-block">
+                        <img src="~/logo/navbar logo.png" alt="PolicySphere" class="h-12 w-auto object-contain transition-all duration-500 group-hover:brightness-110" />
+                        <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-12 h-1 bg-accent rounded-full blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-500"></span>
+                        <span class="absolute -inset-4 bg-accent/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></span>
+                    </a>
+                </div>
+
+                <!-- Right: Actions -->
+                <div class="flex justify-end items-center gap-6">
+
+                    @using Microsoft.AspNetCore.Http
+                    @inject IHttpContextAccessor _httpContextAccessor
+                    @{
+                        var role = _httpContextAccessor.HttpContext.Session.GetString("Role");
+                        var firstName = _httpContextAccessor.HttpContext.Session.GetString("UserFirstName");
+                        var email = _httpContextAccessor.HttpContext.Session.GetString("UserEmail");
+                    }
+ 
+                    @if (string.IsNullOrEmpty(role))
+                    {
+                        <a asp-action="Login" asp-controller="Home" class="text-sm font-medium tracking-widest uppercase text-gray-800 dark:text-white hover:text-accent transition-colors">Login</a>
+                        <a asp-action="Login" asp-controller="Home" class="bg-gray-900 dark:bg-white text-white dark:text-black text-sm px-6 py-2 rounded-full hover:bg-accent dark:hover:bg-accent hover:text-white transition-all duration-300 font-bold border border-white/20 whitespace-nowrap shadow-lg">APPLY NOW</a>
+                    }
+                    else
+                    {
+                         <div class="relative group z-50">
+                            <!-- Trigger -->
+                            <button class="flex items-center gap-4 focus:outline-none py-2">
+                                <div class="hidden xl:flex flex-col items-end">
+                                    <span class="font-display text-lg text-gray-800 dark:text-white leading-none tracking-wide group-hover:text-accent transition-colors duration-300">@firstName</span>
+                                    <span class="text-[10px] uppercase tracking-[0.2em] text-gray-500 group-hover:text-gray-900 dark:group-hover:text-white/60 transition-colors">@role Account</span>
+                                </div>
+                                
+                                <!-- Avatar Container -->
+                                <div class="relative w-12 h-12">
+                                    <div class="absolute inset-0 bg-accent/40 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                    <div class="relative w-full h-full rounded-full bg-gray-200 dark:bg-[#111] border border-gray-300 dark:border-white/20 flex items-center justify-center text-gray-800 dark:text-white font-serif italic text-xl shadow-inner group-hover:border-accent transition-colors duration-300 overflow-hidden">
+                                         <div class="absolute inset-0 bg-gradient-to-tr from-accent/20 to-transparent opacity-50"></div>
+                                         <span class="relative z-10">@(firstName?.Substring(0,1).ToUpper())</span>
+                                    </div>
+                                    <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-black"></div>
+                                </div>
+                            </button>
+                            
+                            <!-- Dropdown Panel -->
+                            <div class="absolute right-0 mt-4 w-80 bg-white dark:bg-[#050505] border border-gray-200 dark:border-white/10 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.8)] overflow-hidden transform origin-top-right transition-all duration-300 opacity-0 invisible translate-y-4 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 backdrop-blur-3xl">
+                                <div class="relative p-6 border-b border-gray-100 dark:border-white/5 bg-gray-50 dark:bg-white/[0.02]">
+                                    <p class="text-gray-900 dark:text-white font-display text-xl truncate pr-4">@email</p>
+                                    <div class="mt-3 flex items-center gap-2">
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-accent/10 text-accent border border-accent/20">@role Member</span>
+                                    </div>
+                                </div>
+                                <div class="p-2 space-y-1">
+                                    @if (role == "Admin"){
+                                         <a asp-controller="Admin" asp-action="Dashboard" class="flex items-center justify-between px-4 py-3 rounded-xl text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-all">
+                                            <span class="font-medium">Admin Dashboard</span>
+                                         </a>
+                                    } else {
+                                         <a asp-controller="User" asp-action="Dashboard" class="flex items-center justify-between px-4 py-3 rounded-xl text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-all">
+                                            <span class="font-medium">My Policies</span>
+                                         </a>
+                                    }
+                                    <a asp-controller="User" asp-action="Settings" class="flex items-center justify-between px-4 py-3 rounded-xl text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-all">
+                                        <span class="font-medium">Settings</span>
+                                    </a>
+                                    @if (role == "Admin"){
+                                        <a asp-controller="Admin" asp-action="Notifications" class="flex items-center justify-between px-4 py-3 rounded-xl text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-all">
+                                            <span class="font-medium">Notifications</span>
+                                        </a>
+                                    }
+                                </div>
+                                <div class="p-2 border-t border-gray-100 dark:border-white/5">
+                                    <a asp-controller="@(role == "Admin" ? "Admin" : "User")" asp-action="Logout" class="flex items-center justify-between px-4 py-3 rounded-xl text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all">
+                                        <span class="font-medium">Sign Out</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Mobile Flex Layout -->
+            <div class="lg:hidden flex justify-between items-center w-full relative z-50">
+                <!-- Logo -->
+                <a asp-action="Index" asp-controller="Home" class="block">
+                    <img src="~/logo/navbar logo.png" alt="PolicySphere" class="h-10 w-auto object-contain" />
+                </a>
+
+                <!-- Hamburger Button -->
+                <button id="mobile-menu-btn" class="text-white focus:outline-none p-2 group">
+                    <div class="w-6 h-5 relative flex flex-col justify-between overflow-hidden">
+                        <span class="w-full h-0.5 bg-white transform transition-all duration-300 group-hover:bg-accent origin-left" id="hamburger-top"></span>
+                        <span class="w-full h-0.5 bg-white transform transition-all duration-300 group-hover:bg-accent" id="hamburger-middle"></span>
+                        <span class="w-full h-0.5 bg-white transform transition-all duration-300 group-hover:bg-accent origin-left" id="hamburger-bottom"></span>
+                    </div>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="fixed inset-0 bg-black z-40 flex flex-col justify-center items-center opacity-0 invisible transition-all duration-500 glass-nav">
+             <!-- Background Effects -->
+             <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+                 <div class="absolute top-[-20%] right-[-20%] w-[500px] h-[500px] bg-accent/10 rounded-full blur-[100px]"></div>
+                 <div class="absolute bottom-[-20%] left-[-20%] w-[500px] h-[500px] bg-purple-900/20 rounded-full blur-[100px]"></div>
+             </div>
+             
+             <div class="flex flex-col items-center space-y-8 z-10 w-full px-6">
+                <a asp-action="Index" asp-controller="Home" class="mobile-link text-3xl font-display text-white/50 hover:text-white hover:scale-110 transition-all duration-300">Home</a>
+                <a asp-action="Index" asp-controller="Schemes" class="mobile-link text-3xl font-display text-white/50 hover:text-white hover:scale-110 transition-all duration-300">Schemes</a>
+                <a asp-action="Services" asp-controller="Home" class="mobile-link text-3xl font-display text-white/50 hover:text-white hover:scale-110 transition-all duration-300">Services</a>
+                <a asp-action="Contact" asp-controller="Home" class="mobile-link text-3xl font-display text-white/50 hover:text-white hover:scale-110 transition-all duration-300">Contact</a>
+                
+                <div class="w-12 h-px bg-white/10 my-4"></div>
+
+                @if (string.IsNullOrEmpty(role))
+                {
+                    <a asp-action="Login" asp-controller="Home" class="text-xl text-white uppercase tracking-widest hover:text-accent transition-colors">Login</a>
+                    <a asp-action="Login" asp-controller="Home" class="bg-white text-black px-8 py-3 rounded-full font-bold uppercase tracking-wider hover:bg-accent hover:text-white transition-all shadow-lg hover:shadow-accent/50">Apply Now</a>
+                }
+                else
+                {
+                    <div class="text-center">
+                         <p class="text-gray-400 text-sm uppercase tracking-widest mb-2">Signed in as</p>
+                         <p class="text-xl text-white font-serif italic mb-6">@firstName</p>
+                         
+                         <div class="flex flex-col gap-4">
+                            @if (role == "Admin"){
+                                <a asp-controller="Admin" asp-action="Dashboard" class="text-white hover:text-accent transition-colors">Dashboard</a>
+                            } else {
+                                <a asp-controller="User" asp-action="Dashboard" class="text-white hover:text-accent transition-colors">My Policies</a>
+                            }
+                            <a asp-controller="User" asp-action="Settings" class="text-white hover:text-accent transition-colors">Settings</a>
+                            <a asp-controller="@(role == "Admin" ? "Admin" : "User")" asp-action="Logout" class="text-red-400 hover:text-red-300 transition-colors">Sign Out</a>
+                         </div>
+                    </div>
+                }
+             </div>
+        </div>
+    </header>
+
+    <div class="container-fluid px-0 min-h-screen flex flex-col pt-0">
+        <main role="main" class="flex-grow">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Premium Cinematic Footer -->
+    <footer class="relative w-full bg-[#020202] border-t border-white/5 pt-32 pb-12 overflow-hidden opacity-0 reveal-footer">
+        <!-- Tubes Cursor Animation Background -->
+        <canvas id="footerTubesCursor" class="absolute inset-0 w-full h-full z-0 opacity-20"></canvas>
+        
+        <!-- Visual Depth & Vignette -->
+        <div class="absolute inset-0 pointer-events-none z-5">
+             <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+             <div class="absolute -bottom-1/2 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-accent/5 blur-[150px] rounded-full mix-blend-screen"></div>
+        </div>
+
+        <div class="max-w-[90rem] mx-auto px-6 relative z-10">
+            <!-- Top: Brand Essence -->
+            <div class="flex flex-col lg:flex-row justify-between items-start mb-24 gap-12">
+                <div class="max-w-xl">
+                    <div class="mb-6">
+                        <video autoplay loop muted playsinline class="w-80 h-50 object-contain">
+                            <source src="/video/logo.mov" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <p class="font-serif italic text-2xl text-gray-400 leading-normal">
+                        "A modern approach to protection built on trust, clarity, and thoughtful design."
+                    </p>
+                </div>
+                
+                <!-- Silent Navigation Grid -->
+                <div class="flex flex-wrap gap-12 lg:gap-24 text-sm font-medium text-gray-500">
+                    <!-- Column 1 -->
+                    <div class="flex flex-col gap-4">
+                        <span class="text-xs uppercase tracking-[0.2em] text-white/40 mb-2">Services</span>
+                        <a href="@Url.Action("Index", "Schemes", new { type = "Life" })" class="hover:text-white transition-colors duration-300">Life Insurance</a>
+                        <a href="@Url.Action("Index", "Schemes", new { type = "Medical" })" class="hover:text-white transition-colors duration-300">Medical Insurance</a>
+                        <a href="@Url.Action("Index", "Schemes", new { type = "Motor" })" class="hover:text-white transition-colors duration-300">Motor Insurance</a>
+                        <a href="@Url.Action("Index", "Schemes", new { type = "Home" })" class="hover:text-white transition-colors duration-300">Home Insurance</a>
+                    </div>
+                    
+                    <!-- Column 2 -->
+                    <div class="flex flex-col gap-4">
+                        <span class="text-xs uppercase tracking-[0.2em] text-white/40 mb-2">Account</span>
+                        <a asp-action="Login" asp-controller="Home" class="hover:text-white transition-colors duration-300">Login</a>
+                        <a asp-action="Signup" asp-controller="Home" class="hover:text-white transition-colors duration-300">Register</a>
+                        <a asp-action="CalculatePremium" asp-controller="User" class="hover:text-white transition-colors duration-300">Premium Calculator</a>
+                    </div>
+
+                    <!-- Column 3 -->
+                    <div class="flex flex-col gap-4">
+                        <span class="text-xs uppercase tracking-[0.2em] text-white/40 mb-2">Company</span>
+                        <a asp-action="About" asp-controller="Home" class="hover:text-white transition-colors duration-300">About</a>
+                        <a asp-action="Team" asp-controller="Home" class="hover:text-white transition-colors duration-300">Our Team</a>
+                        <a asp-action="Index" asp-controller="Insights" class="hover:text-white transition-colors duration-300">Insights & Updates</a>
+                        <a asp-action="Contact" asp-controller="Home" class="hover:text-white transition-colors duration-300">Contact</a>
+                        <a asp-action="Privacy" asp-controller="Home" class="hover:text-white transition-colors duration-300">Privacy</a>
+                        <a href="/Admin/Login" class="hover:text-white transition-colors duration-300">Admin Portal</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom: Closure -->
+            <div class="border-t border-white/5 pt-12 flex flex-col md:flex-row justify-between items-center gap-6 text-xs text-gray-600 font-mono tracking-wide">
+                <p>© 2026 PolicySphere. All rights reserved.</p>
+                <p class="text-white/20">This Project Developed By Mujtabazadaii.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    <!-- Animation Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+    
+    <script>
+        // Initialize Lenis
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+
+        requestAnimationFrame(raf);
+        
+        // Register GSAP plugins
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Global Entrance Animation
+        window.addEventListener('load', () => {
+            const tl = gsap.timeline();
+            
+            // 1. Reveal Body
+            tl.to("body", { autoAlpha: 1, duration: 0.5 });
+
+            // 2. Animate Navbar Elements
+            tl.from("header nav > div", {
+                y: -20,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: "power3.out"
+            }, "-=0.2");
+            
+            // 3. Parallax Background Glow
+            gsap.to(".glow-blob", {
+                yPercent: 50,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "body",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1
+                }
+            });
+            
+            gsap.to(".glow-blob-2", {
+                yPercent: -30,
+                xPercent: 20,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "body",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1.2
+                }
+            });
+            
+            // Navbar Scrolled State
+            const header = document.querySelector('header');
+            // User requested transparent navbar. We will remove the glass effect script or keep it purely transparent. 
+            // "sb se phle navbar ko transprint kro" -> First make navbar transparent. 
+            // If they mean always transparent, I should remove the adding of 'glass-nav'.
+            // However, usually people want it transparent at top and solid/glass on scroll. 
+            // But strict instruction "transprint kro" might mean remove the blur I added. 
+            // I'll comment out the glass-nav addition to ensure it stays transparent as requested.
+            /*
+            window.addEventListener('scroll', () => {
+                 if (window.scrollY > 50) {
+                     header.classList.add('glass-nav');
+                 } else {
+                     header.classList.remove('glass-nav');
+                 }
+            });
+            */
+
+            // 4. Footer Reveal Animation
+            gsap.to(".reveal-footer", {
+                scrollTrigger: {
+                    trigger: "footer",
+                    start: "top 95%", // Reveal slightly before bottom
+                    toggleActions: "play none none reverse"
+                },
+                autoAlpha: 1,
+                y: 0,
+                duration: 1.5,
+                ease: "power2.out"
+            });
+        });
+
+        // Mobile Menu Toggle logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const hamburgerTop = document.getElementById('hamburger-top');
+            const hamburgerMiddle = document.getElementById('hamburger-middle');
+            const hamburgerBottom = document.getElementById('hamburger-bottom');
+            const mobileLinks = document.querySelectorAll('.mobile-link');
+            let isMenuOpen = false;
+
+            if (mobileBtn && mobileMenu) {
+                function toggleMenu() {
+                    isMenuOpen = !isMenuOpen;
+                    
+                    if (isMenuOpen) {
+                        // Open Menu
+                        mobileMenu.classList.remove('invisible', 'opacity-0');
+                        // Animate Hamburger
+                        if(hamburgerTop) hamburgerTop.classList.add('rotate-45', 'translate-y-2'); // Adjusted translation for visual centeredness if needed, or stick to simple
+                        // Let's use the transform classes we set up in HTML or simply add class 'open'
+                        // Re-checking the classes used in HTML for hamburger spans
+                        
+                        // The spans are just spans. I will manually animate classes here as previously planned.
+                        // However, 'translate-x-1' etc usage depends on exact size.
+                        // Let's stick to the previous plan.
+                        
+                        hamburgerTop.classList.add('rotate-45', 'translate-y-[6px]', 'translate-x-[2px]');
+                        hamburgerMiddle.classList.add('opacity-0');
+                        hamburgerBottom.classList.add('-rotate-45', '-translate-y-[6px]', 'translate-x-[2px]');
+                        
+                        // Lock Body Scroll
+                        document.body.style.overflow = 'hidden';
+                        
+                        // Animate Links
+                        if(window.gsap) {
+                            gsap.fromTo(mobileLinks, 
+                                { y: 50, opacity: 0 },
+                                { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.7)' }
+                            );
+                        }
+                    } else {
+                        // Close Menu
+                        mobileMenu.classList.add('invisible', 'opacity-0');
+                        
+                        // Reset Hamburger
+                        hamburgerTop.classList.remove('rotate-45', 'translate-y-[6px]', 'translate-x-[2px]');
+                        hamburgerMiddle.classList.remove('opacity-0');
+                        hamburgerBottom.classList.remove('-rotate-45', '-translate-y-[6px]', 'translate-x-[2px]');
+                        
+                        // Unlock Body Scroll
+                        document.body.style.overflow = '';
+                    }
+                }
+
+                mobileBtn.addEventListener('click', toggleMenu);
+                
+                // Close menu when clicking a link
+                mobileLinks.forEach(link => {
+                    link.addEventListener('click', toggleMenu);
+                });
+            }
+        });
+    </script>
+    
+    <partial name="_Chatbot" />
+    
+    @await RenderSectionAsync("Scripts", required: false)
+    
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+@{
+    ViewData["Title"] = "Policy Details";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+@model E_project_Insu.Models.Policy
+
+<div class="p-8 md:p-12 w-full max-w-4xl mx-auto">
+    <div class="mb-8 intro-animate opacity-0">
+        <a href="@Url.Action("Policies", "User")" class="text-gray-500 hover:text-white mb-4 inline-flex items-center text-sm transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Back to Policies
+        </a>
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl md:text-5xl font-display font-medium text-white mb-2">@Model.PolicyType Insurance</h1>
+                <p class="text-gray-500 font-mono tracking-wider">@Model.PolicyNumber</p>
+            </div>
+            <span class="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/5 text-white border border-white/10">
+                @Model.Status
+            </span>
+        </div>
+    </div>
+
+    <div class="bg-[#0A0A0A] border border-white/5 rounded-3xl p-8 md:p-12 intro-animate opacity-0 delay-100 relative overflow-hidden">
+        
+        <!-- Glow -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 relative z-10">
+            
+            <div class="space-y-8">
+                <div>
+                   <p class="text-[10px] uppercase tracking-widest text-gray-500 font-semibold mb-1">Coverage Amount</p>
+                   <p class="text-4xl text-white font-display font-medium">$@Model.CoverageAmount.ToString("N0")</p>
+                </div>
+                
+                <div>
+                   <p class="text-[10px] uppercase tracking-widest text-gray-500 font-semibold mb-1">Monthly Premium</p>
+                   <p class="text-2xl text-white font-display">$@Model.PremiumAmount.ToString("N2")</p>
+                </div>
+            </div>
+
+            <div class="space-y-8">
+                 <div>
+                   <p class="text-[10px] uppercase tracking-widest text-gray-500 font-semibold mb-1">Policy Period</p>
+                   <p class="text-lg text-white">@Model.StartDate.ToString("MMM dd, yyyy") — @Model.EndDate.ToString("MMM dd, yyyy")</p>
+                </div>
+
+                <div>
+                   <p class="text-[10px] uppercase tracking-widest text-gray-500 font-semibold mb-1">Policy Holder</p>
+                   <p class="text-lg text-white">@Context.Session.GetString("UserFirstName")</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mt-12 pt-8 border-t border-white/5 flex gap-4">
+            <a href="@Url.Action("PayPremium", "User")" class="px-6 py-3 bg-white text-black font-medium rounded-full hover:bg-gray-200 transition-colors">
+                Pay Premium
+            </a>
+            <a href="@Url.Action("ApplyLoan", "User")" class="px-6 py-3 bg-white/5 text-white font-medium rounded-full hover:bg-white/10 transition-colors border border-white/10">
+                Apply for Loan
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        gsap.to(".intro-animate", { opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: "power2.out" });
+    });
+</script>

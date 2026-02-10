@@ -1,0 +1,92 @@
+@model IEnumerable<E_project_Insu.Models.Loan>
+
+@{
+    ViewData["Title"] = "Manage Loans";
+}
+
+<div class="p-8">
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="text-3xl font-display font-bold text-white mb-2">Loan Requests</h1>
+            <p class="text-gray-400">Review and approve policy loans.</p>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="bg-panel border border-white/10 rounded-2xl overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-white/5 border-b border-white/10 text-gray-400 text-xs uppercase tracking-wider">
+                        <th class="p-6 font-medium">Loan ID</th>
+                        <th class="p-6 font-medium">Applicant</th>
+                        <th class="p-6 font-medium">Policy</th>
+                        <th class="p-6 font-medium">Amount</th>
+                        <th class="p-6 font-medium">Status</th>
+                        <th class="p-6 font-medium">Date</th>
+                        <th class="p-6 font-medium">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5">
+                    @foreach (var loan in Model)
+                    {
+                        <tr class="hover:bg-white/5 transition-colors">
+                            <td class="p-6 text-gray-500">#@loan.LoanId</td>
+                            <td class="p-6 text-white font-medium">
+                                <div class="flex flex-col">
+                                    <span>@loan.Policy?.User?.FirstName @loan.Policy?.User?.LastName</span>
+                                    <span class="text-xs text-gray-500">@loan.Policy?.User?.Email</span>
+                                </div>
+                            </td>
+                            <td class="p-6 text-gray-300">
+                                @loan.Policy?.PolicyNumber
+                                <div class="text-xs text-gray-500 mt-1">Cov: @loan.Policy?.CoverageAmount.ToString("C")</div>
+                            </td>
+                            <td class="p-6 text-accent font-bold">@loan.RequestedAmount.ToString("C")</td>
+                            <td class="p-6">
+                                <span class="px-3 py-1 rounded-full text-xs font-medium border border-white/10 
+                                      @(loan.LoanStatus == "Pending" ? "bg-yellow-500/10 text-yellow-400 border-yellow-500/20" : 
+                                        loan.LoanStatus == "Approved" ? "bg-green-500/10 text-green-400 border-green-500/20" :
+                                        "bg-red-500/10 text-red-400 border-red-500/20")">
+                                    @loan.LoanStatus
+                                </span>
+                            </td>
+                            <td class="p-6 text-gray-400 text-sm">@loan.RequestedDate.ToString("MMM dd")</td>
+                            <td class="p-6">
+                                @if(loan.LoanStatus == "Pending")
+                                {
+                                    <div class="flex space-x-2">
+                                        <form asp-action="UpdateLoanStatus" method="post">
+                                            <input type="hidden" name="loanId" value="@loan.LoanId" />
+                                            <input type="hidden" name="status" value="Approved" />
+                                            <button type="submit" class="bg-green-500/20 hover:bg-green-500/40 text-green-400 p-2 rounded-lg transition-colors" title="Approve">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                            </button>
+                                        </form>
+                                        <form asp-action="UpdateLoanStatus" method="post">
+                                            <input type="hidden" name="loanId" value="@loan.LoanId" />
+                                            <input type="hidden" name="status" value="Rejected" />
+                                            <button type="submit" class="bg-red-500/20 hover:bg-red-500/40 text-red-400 p-2 rounded-lg transition-colors" title="Reject">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                            </button>
+                                        </form>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="text-gray-600 text-xs italic">Completed</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @if (!Model.Any())
+        {
+            <div class="p-12 text-center text-gray-500">
+                No pending loan requests.
+            </div>
+        }
+    </div>
+</div>

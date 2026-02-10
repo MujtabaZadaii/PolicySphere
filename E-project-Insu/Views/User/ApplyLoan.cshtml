@@ -1,0 +1,157 @@
+@{
+    ViewData["Title"] = "Apply for Loan";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<div class="p-8 md:p-12 w-full max-w-4xl mx-auto">
+    
+    <!-- Header -->
+    <div class="mb-12 intro-animate opacity-0">
+        <h1 class="text-3xl md:text-5xl font-display font-medium text-white mb-3">Apply for Policy Loan</h1>
+        <p class="text-gray-500 font-light text-sm max-w-2xl">
+            Request a loan against your active insurance policy. Eligibility is subject to policy status and accrued value.
+        </p>
+    </div>
+
+    <div class="intro-animate opacity-0 delay-100 bg-[#0A0A0A] border border-white/5 rounded-3xl p-8 md:p-12 relative overflow-hidden">
+        
+        <!-- Decoration -->
+        <div class="absolute top-0 right-0 w-80 h-80 bg-accent/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+        @if (ViewBag.Success == null)
+        {
+        <form asp-action="ApplyLoan" method="post" class="relative z-10 space-y-10" id="loanForm">
+            @if (ViewBag.Error != null)
+            {
+                <div class="bg-red-500/10 border border-red-500/20 text-red-500 p-4 rounded-lg text-sm">
+                    @ViewBag.Error
+                </div>
+            }
+            
+            <!-- Policy Selection -->
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-[10px] uppercase tracking-widest text-gray-500 font-semibold mb-3">Select Eligible Policy</label>
+                    <div class="relative">
+                        <select id="policySelect" name="policyId" onchange="updateLoanDetails()" class="w-full bg-[#0F0F0F] text-white border-b border-white/10 py-4 appearance-none focus:outline-none focus:border-accent transition-colors text-lg" required>
+                            <option value="" disabled selected>Choose a policy...</option>
+                            @if (ViewBag.ActivePolicies != null)
+                            {
+                                foreach (var policy in ViewBag.ActivePolicies as IEnumerable<E_project_Insu.Models.Policy>)
+                                {
+                                    var limit = policy.CoverageAmount * 0.5m;
+                                    <option value="@policy.PolicyId" data-limit="@limit" data-type="@policy.PolicyType">@policy.PolicyType (@policy.PolicyNumber) - @policy.Status</option>
+                                }
+                            }
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center pointer-events-none text-gray-500">
+                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Auto-Calculated Details -->
+                <div id="policyDetails" class="hidden grid grid-cols-2 bg-white/5 rounded-xl p-6 gap-6 border border-white/5">
+                    <div>
+                        <p class="text-[10px] uppercase tracking-widest text-gray-500 mb-1">Policy Type</p>
+                        <p class="text-white" id="displayType">-</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase tracking-widest text-gray-500 mb-1">Max Loan Limit</p>
+                        <p class="text-accent font-medium text-lg" id="displayLimit">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loan Request -->
+            <div class="space-y-8 opacity-50 pointer-events-none transition-all duration-500" id="requestSection">
+                <div class="group relative">
+                     <input type="number" id="loanAmount" name="requestedAmount" class="peer w-full bg-transparent border-b border-white/20 py-3 text-3xl text-white placeholder-transparent focus:outline-none focus:border-accent transition-colors font-display" placeholder="Amount" required />
+                     <label for="loanAmount" class="absolute left-0 -top-3.5 text-gray-500 text-xs transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-accent peer-focus:text-xs">Requested Loan Amount ($)</label>
+                </div>
+
+                <div class="group relative">
+                     <textarea id="reason" rows="2" class="peer w-full bg-transparent border-b border-white/20 py-2 text-base text-white placeholder-transparent focus:outline-none focus:border-accent transition-colors resize-none" placeholder="Reason"></textarea>
+                     <label for="reason" class="absolute left-0 -top-3.5 text-gray-500 text-xs transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-accent peer-focus:text-xs">Purpose of Loan (Optional)</label>
+                </div>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="flex items-start gap-3 bg-blue-500/5 p-4 rounded-lg border border-blue-500/10">
+                <svg class="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <p class="text-xs text-blue-200/60 leading-relaxed max-w-lg">
+                    By submitting this request, you acknowledge that loan approval is subject to company review. The final disbursement amount may vary based on outstanding premiums and policy terms.
+                </p>
+            </div>
+
+            <button type="submit" class="px-8 py-3 rounded-full bg-white text-black font-medium hover:bg-gray-200 transition-colors w-full md:w-auto">
+                Submit Request
+            </button> <!-- closing tag was missing in chunk but context implies it ends here -->
+
+        </form>
+        }
+
+        <!-- Success Message (Hidden) -->
+        <!-- Success Message -->
+        @if (ViewBag.Success != null)
+        {
+            <div id="successMessage" class="absolute inset-0 z-20 bg-[#0A0A0A] flex flex-col items-center justify-center text-center p-8">
+                <div class="w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center mb-6 text-green-500">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h3 class="text-2xl text-white font-display mb-2">Request Submitted</h3>
+                <p class="text-gray-500 max-w-sm">@ViewBag.Success</p>
+                <a href="@Url.Action("Dashboard", "User")" class="mt-8 text-sm text-accent hover:text-white transition-colors">Return to Dashboard</a>
+            </div>
+        }
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        gsap.to(".intro-animate", { opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: "power2.out" });
+    });
+
+    function updateLoanDetails() {
+        const select = document.getElementById('policySelect');
+        const selectedOption = select.options[select.selectedIndex];
+        
+        if (selectedOption.value) {
+            // Show details
+            document.getElementById('policyDetails').classList.remove('hidden');
+            document.getElementById('displayType').innerText = selectedOption.dataset.type;
+            document.getElementById('displayLimit').innerText = '$' + parseInt(selectedOption.dataset.limit).toLocaleString();
+            
+            // Enable inputs
+            const section = document.getElementById('requestSection');
+            section.classList.remove('opacity-50', 'pointer-events-none');
+        }
+    }
+
+    function submitLoan() {
+        const amount = parseFloat(document.getElementById('loanAmount').value);
+        const select = document.getElementById('policySelect');
+        const limit = parseFloat(select.options[select.selectedIndex]?.dataset.limit || 0);
+        
+        // Basic Validation
+        if (!amount || amount <= 0) return;
+        
+        if (amount > limit) {
+            document.getElementById('amountError').classList.remove('hidden');
+            return;
+        } else {
+            document.getElementById('amountError').classList.add('hidden');
+        }
+
+        // Simulate Success
+        const form = document.getElementById('loanForm');
+        const success = document.getElementById('successMessage');
+
+        gsap.to(form, { opacity: 0, duration: 0.5, onComplete: () => {
+            form.classList.add('hidden');
+            success.classList.remove('hidden');
+            gsap.from(success, { opacity: 0, scale: 0.95, duration: 0.6, ease: "back.out(1.7)" });
+        }});
+    }
+</script>

@@ -1,0 +1,136 @@
+@{
+    ViewData["Title"] = "Apply for Scheme";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    var scheme = ViewBag.Scheme as E_project_Insu.Models.Scheme;
+}
+
+<div class="p-8 md:p-12 w-full max-w-7xl mx-auto">
+    
+    <!-- Intro Header -->
+    <div class="mb-12 intro-animate opacity-0 flex items-start justify-between">
+        <div>
+             <h1 class="text-3xl md:text-5xl font-display font-medium text-white mb-3">Apply for Protection</h1>
+             <p class="text-gray-500 font-light">Customize your plan based on the <strong>@scheme.SchemeName</strong> scheme.</p>
+        </div>
+        <div class="text-right hidden md:block">
+            <div class="text-sm text-gray-400 uppercase tracking-widest mb-1">Scheme Type</div>
+            <div class="text-accent font-bold text-xl">@scheme.InsuranceType</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        
+        <!-- Form Section -->
+        <div class="bg-[#0A0A0A] border border-white/5 rounded-2xl p-8 md:p-12 intro-animate opacity-0 delay-100 h-fit">
+            <h2 class="text-xl font-display text-white mb-8 border-b border-white/10 pb-4">Configuration</h2>
+            
+            <form asp-action="ApplyScheme" method="post" class="space-y-8">
+                <input type="hidden" name="schemeId" value="@scheme.SchemeId" />
+
+                <!-- Coverage -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-3 uppercase tracking-wider">
+                        Desired Coverage Amount (USD)
+                    </label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                        <input type="number" name="coverageAmount" id="coverageInput"
+                               class="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-6 py-4 text-white placeholder-gray-600 focus:outline-none focus:border-accent transition-colors"
+                               placeholder="e.g. 50000" min="1000" required oninput="calculatePremium()" />
+                    </div>
+                    <p class="text-xs text-gray-600 mt-2">Enter the sum assured you wish to secure.</p>
+                </div>
+
+                <!-- Duration -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-3 uppercase tracking-wider">
+                        Policy Duration (Years)
+                    </label>
+                    <div class="relative">
+                         <input type="range" name="durationYears" id="durationInput" min="1" max="30" value="5" 
+                                class="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent"
+                                oninput="updateDurationLabel(this.value)" />
+                         <div class="flex justify-between mt-2 text-xs text-gray-500">
+                             <span>1 Year</span>
+                             <span id="durationValue" class="text-accent font-bold text-base">5 Years</span>
+                             <span>30 Years</span>
+                         </div>
+                    </div>
+                </div>
+
+                <!-- Summary Box -->
+                <div class="bg-white/5 rounded-xl p-6 border border-white/10 mt-8">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-gray-400 text-sm">Estimated Monthly Premium</span>
+                        <span id="premiumDisplay" class="text-2xl font-bold text-white">$0.00</span>
+                    </div>
+                    <div class="text-xs text-gray-600 text-right">*Estimation based on standard rates</div>
+                </div>
+
+                <button type="submit" 
+                        class="w-full px-8 py-5 bg-accent text-black font-bold text-lg rounded-full hover:bg-accent/80 transition-all hover:scale-[1.02] shadow-[0_0_20px_rgba(172,88,233,0.3)] mt-4">
+                    Confirm & Purchase Policy
+                </button>
+            </form>
+        </div>
+
+        <!-- Info Section -->
+        <div class="intro-animate opacity-0 delay-200">
+            <div class="bg-white/5 rounded-2xl p-8 border border-white/10 mb-8">
+                <h3 class="text-lg font-bold text-white mb-4">Scheme Details</h3>
+                <div class="space-y-4">
+                    <div>
+                        <div class="text-xs text-gray-500 uppercase tracking-widest mb-1">Description</div>
+                        <p class="text-gray-300 leading-relaxed">@scheme.Description</p>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-500 uppercase tracking-widest mb-1">Eligibility Criteria</div>
+                        <p class="text-gray-300 leading-relaxed">@scheme.Eligibility</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-accent/20 to-purple-900/20 rounded-2xl p-8 border border-accent/20 relative overflow-hidden">
+                <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-accent/40 blur-2xl rounded-full"></div>
+                <h3 class="text-lg font-bold text-white mb-2 relative z-10">Why Choose This Plan?</h3>
+                <ul class="space-y-3 text-gray-300 text-sm relative z-10">
+                    <li class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-accent flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        <span>Comprehensive coverage tailored to your needs.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-accent flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        <span>Quick and hassle-free claim settlement process.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-accent flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        <span>24/7 dedicated customer support.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        gsap.to(".intro-animate", { opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: "power2.out" });
+    });
+
+    function updateDurationLabel(val) {
+        document.getElementById('durationValue').innerText = val + " Years";
+    }
+
+    function calculatePremium() {
+        const coverage = document.getElementById('coverageInput').value;
+        if(coverage) {
+            // Simple Logic: 2% of coverage / 12 months
+            const rate = 0.02; 
+            const monthly = (coverage * rate) / 12;
+            document.getElementById('premiumDisplay').innerText = "$" + monthly.toFixed(2);
+        } else {
+            document.getElementById('premiumDisplay').innerText = "$0.00";
+        }
+    }
+</script>

@@ -1,0 +1,71 @@
+@model IEnumerable<E_project_Insu.Models.Loan>
+
+@{
+    ViewData["Title"] = "My Loans";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<div class="p-8 md:p-12 w-full max-w-7xl mx-auto">
+    
+    <div class="mb-12 intro-animate opacity-0 flex items-end justify-between">
+        <div>
+             <h1 class="text-3xl md:text-5xl font-display font-medium text-white mb-3">My Loans</h1>
+             <p class="text-gray-500 font-light">Track the status of your loan applications.</p>
+        </div>
+        <a asp-action="ApplyLoan" class="px-6 py-3 bg-accent text-black font-medium rounded-full hover:bg-accent/80 transition-colors">
+            + New Request
+        </a>
+    </div>
+
+    <div class="bg-[#0A0A0A] border border-white/5 rounded-2xl overflow-hidden intro-animate opacity-0 delay-100">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-white/5 border-b border-white/10 text-gray-500 text-xs uppercase tracking-wider">
+                        <th class="p-6 font-medium">Loan ID</th>
+                        <th class="p-6 font-medium">Policy</th>
+                        <th class="p-6 font-medium">Requested Amount</th>
+                        <th class="p-6 font-medium">Date</th>
+                        <th class="p-6 font-medium">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5">
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="p-12 text-center text-gray-500">
+                                No loan requests found.
+                            </td>
+                        </tr>
+                    }
+                    @foreach (var loan in Model)
+                    {
+                        <tr class="hover:bg-white/5 transition-colors">
+                            <td class="p-6 text-gray-500">#@loan.LoanId</td>
+                            <td class="p-6 text-gray-300">
+                                <span class="block text-white font-medium">@loan.Policy?.PolicyType</span>
+                                <span class="text-xs text-gray-500 font-mono">@loan.Policy?.PolicyNumber</span>
+                            </td>
+                            <td class="p-6 text-white font-display text-lg">@loan.RequestedAmount.ToString("C")</td>
+                            <td class="p-6 text-gray-400 text-sm">@loan.RequestedDate.ToString("MMM dd, yyyy")</td>
+                            <td class="p-6">
+                                <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider 
+                                      @(loan.LoanStatus == "Pending" ? "bg-yellow-500/10 text-yellow-500 border border-yellow-500/20" : 
+                                        loan.LoanStatus == "Approved" ? "bg-green-500/10 text-green-500 border border-green-500/20" :
+                                        "bg-red-500/10 text-red-500 border border-red-500/20")">
+                                    @loan.LoanStatus
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        gsap.to(".intro-animate", { opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: "power2.out" });
+    });
+</script>

@@ -1,0 +1,80 @@
+  @{ 
+    ViewData["Title"] = "My Policies";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+
+@model IEnumerable<E_project_Insu.Models.Policy>
+
+<div class="p-8 md:p-12 lg:p-16 w-full max-w-7xl mx-auto">
+    
+    <!-- Header -->
+    <div class="mb-12 intro-animate opacity-0 flex items-end justify-between">
+        <div>
+             <h1 class="text-3xl md:text-5xl font-display font-medium text-white mb-3">My Coverage</h1>
+             <p class="text-gray-500 font-light">Detailed view of your active and past insurance policies.</p>
+        </div>
+        <!-- Add Button -->
+        <a href="@Url.Action("BuyPolicy", "User")" class="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center text-accent hover:bg-accent hover:text-white transition-all duration-300 group">
+             <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+        </a>
+    </div>
+
+    <!-- Breathable Policy Panels -->
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+        @if (!Model.Any())
+        {
+             <div class="col-span-full text-center py-12 text-gray-500">
+                 <p>No policies found. Contact support to purchase a plan.</p>
+             </div>
+        }
+
+        @foreach (var item in Model)
+        {
+            var bgImage = item.ImageUrl;
+            if (string.IsNullOrEmpty(bgImage))
+            {
+                if (item.PolicyType.Contains("Life", StringComparison.OrdinalIgnoreCase)) { bgImage = "/policy images/life policy.png"; }
+                else if (item.PolicyType.Contains("Medical", StringComparison.OrdinalIgnoreCase)) { bgImage = "/policy images/medical policy.jfif"; }
+                else if (item.PolicyType.Contains("Motor", StringComparison.OrdinalIgnoreCase)) { bgImage = "/policy images/MOTOR policy.jfif"; }
+                else if (item.PolicyType.Contains("Home", StringComparison.OrdinalIgnoreCase)) { bgImage = "/policy images/Home-Insurance.jpg"; }
+                else { bgImage = "/policy images/life policy.png"; }
+            }
+
+            <div class="policy-panel group relative flex flex-col justify-between h-72 p-8 bg-[#0A0A0A] border border-white/5 rounded-2xl hover:border-accent/30 transition-all duration-500 hover:bg-[#0F0F0F] opacity-0 translate-y-8 overflow-hidden">
+                <!-- Background Image -->
+                <div class="absolute inset-0 bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-700" style="background-image: url('@bgImage');"></div>
+                <!-- Gradient Overlay -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/40"></div>
+                
+                 <!-- Hover Glow -->
+                <div class="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-2xl pointer-events-none blur-xl"></div>
+                
+                <div class="relative z-10 flex justify-between items-start">
+                    <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/80 group-hover:text-accent group-hover:border-accent/30 transition-all duration-500">
+                         <!-- Simple Icon based on first letter or generic -->
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider @(item.Status == "Active" ? "bg-green-500/10 text-green-500 border-green-500/20" : item.Status == "Pending" ? "bg-yellow-500/10 text-yellow-500 border-yellow-500/20" : "bg-red-500/10 text-red-500 border-red-500/20") border">@item.Status</span>
+                </div>
+
+                <div class="relative z-10 mt-auto">
+                    <h3 class="text-2xl font-display font-medium text-white mb-1">@item.PolicyType Insurance</h3>
+                    <p class="text-xs font-mono text-gray-500 mb-6 tracking-wider">@item.PolicyNumber</p>
+                    
+                    <div class="flex items-center justify-between border-t border-white/5 pt-4">
+                        <span class="text-xs text-gray-400 uppercase tracking-widest">Coverage: $@item.CoverageAmount.ToString("N0")</span>
+                        <a href="@Url.Action("PolicyDetails", "User", new { id = item.PolicyId })" class="text-xs font-bold text-accent hover:text-white transition-colors uppercase tracking-widest">View Details →</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        gsap.to(".intro-animate", { opacity: 1, y: 0, duration: 1, ease: "power2.out" });
+        gsap.to(".policy-panel", { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: "power2.out", delay: 0.2 });
+    });
+</script>

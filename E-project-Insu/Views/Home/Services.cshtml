@@ -1,0 +1,197 @@
+@{
+    ViewData["Title"] = "Services";
+}
+
+<div class="w-full flex flex-col relative overflow-hidden">
+    
+    <!-- Intro Section -->
+    <div class="relative w-full py-32 md:py-48 px-6 flex flex-col items-center justify-center text-center z-10 intro-animate opacity-0">
+        <h1 class="text-5xl md:text-8xl font-display font-bold tracking-tighter text-white mb-6">
+            Our Insurance Services
+        </h1>
+        <p class="text-xl md:text-2xl text-gray-400 font-light max-w-2xl leading-relaxed">
+            Comprehensive protection designed for real-life needs.
+        </p>
+        <!-- Soft Gradient Divider -->
+        <div class="mt-16 w-32 h-1 bg-gradient-to-r from-transparent via-accent to-transparent opacity-50"></div>
+    </div>
+
+    <!-- SERVICES STACK -->
+    <div class="flex flex-col w-full relative z-10">
+        
+        <!-- Service 1: Life Insurance (Text Left, Visual Right) -->
+        <div class="service-panel min-h-[70vh] w-full grid grid-cols-1 lg:grid-cols-2 group border-t border-white/5">
+            <!-- Text Side -->
+            <div class="flex flex-col justify-center px-8 md:px-24 py-20 order-1 bg-black/20 backdrop-blur-sm">
+                <span class="text-accent font-mono text-sm tracking-[0.2em] uppercase mb-6">01 / Protection</span>
+                <h2 class="text-6xl md:text-8xl font-serif text-white mb-4 leading-none tracking-tight">Life<br>Insurance</h2>
+                <p class="text-2xl text-gray-500 font-serif italic mb-8">"Protection for those who matter most."</p>
+                <div class="w-12 h-px bg-white/20 mb-8"></div>
+                <p class="text-gray-400 text-lg max-w-md leading-relaxed mb-10">
+                    Secure your family's future with plans designed to provide financial stability and peace of mind when it counts.
+                </p>
+                <a href="#" class="inline-flex items-center text-lg text-white hover:text-accent transition-colors duration-300 gap-3 group/link">
+                    Explore Coverage 
+                    <span class="transform transition-transform duration-300 group-hover/link:translate-x-2">→</span>
+                </a>
+            </div>
+            <!-- Visual Side -->
+            <div class="relative h-full w-full min-h-[50vh] lg:min-h-auto order-2 overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-950 to-black z-10"></div>
+                <!-- Abstract Cinematic Visual -->
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-800 via-black to-black opacity-80 scale-100 group-hover:scale-110 transition-transform duration-[3000ms] ease-out"></div>
+                <!-- Moving Glow -->
+                <div class="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-accent/10 blur-[120px] rounded-full mix-blend-screen opacity-40 group-hover:opacity-60 transition-opacity duration-1000"></div>
+                <div class="absolute inset-0 bg-noise opacity-[0.03]"></div>
+            </div>
+        </div>
+
+        <!-- Service 2: Medical Insurance (Visual Left, Text Right) -->
+        <div class="service-panel min-h-[70vh] w-full grid grid-cols-1 lg:grid-cols-2 group border-t border-white/5">
+            <!-- Visual Side -->
+            <div class="relative h-full w-full min-h-[50vh] lg:min-h-auto order-2 lg:order-1 overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-bl from-cyan-950/30 via-gray-950 to-black z-10"></div>
+                 <div class="absolute inset-0 bg-[conic-gradient(at_top_right,_var(--tw-gradient-stops))] from-gray-900 via-black to-gray-950 opacity-80 scale-100 group-hover:scale-110 transition-transform duration-[3000ms] ease-out"></div>
+                 <div class="absolute bottom-1/3 left-1/3 w-[600px] h-[600px] bg-cyan-500/10 blur-[100px] rounded-full mix-blend-screen opacity-30 group-hover:opacity-50 transition-opacity duration-1000"></div>
+                <div class="absolute inset-0 bg-noise opacity-[0.03]"></div>
+            </div>
+             <!-- Text Side -->
+            <div class="flex flex-col justify-center px-8 md:px-24 py-20 order-1 lg:order-2 bg-black/20 backdrop-blur-sm">
+                <span class="text-accent font-mono text-sm tracking-[0.2em] uppercase mb-6">02 / Health</span>
+                <h2 class="text-6xl md:text-8xl font-serif text-white mb-4 leading-none tracking-tight">Medical<br>Insurance</h2>
+                <p class="text-2xl text-gray-500 font-serif italic mb-8">"Healthcare without hesitation."</p>
+                <div class="w-12 h-px bg-white/20 mb-8"></div>
+                <p class="text-gray-400 text-lg max-w-md leading-relaxed mb-10">
+                    Comprehensive health coverage that gives you access to the best care with zero financial stress.
+                </p>
+                <a href="#" class="inline-flex items-center text-lg text-white hover:text-accent transition-colors duration-300 gap-3 group/link">
+                    Calculate Premium
+                    <span class="transform transition-transform duration-300 group-hover/link:translate-x-2">→</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Service 3: Motor Insurance (Text Left, Visual Right) -->
+        <div class="service-panel min-h-[70vh] w-full grid grid-cols-1 lg:grid-cols-2 group border-t border-white/5">
+            <!-- Text Side -->
+            <div class="flex flex-col justify-center px-8 md:px-24 py-20 order-1 bg-black/20 backdrop-blur-sm">
+                <span class="text-accent font-mono text-sm tracking-[0.2em] uppercase mb-6">03 / Mobility</span>
+                <h2 class="text-6xl md:text-8xl font-serif text-white mb-4 leading-none tracking-tight">Motor<br>Insurance</h2>
+                <p class="text-2xl text-gray-500 font-serif italic mb-8">"Confidence on every road."</p>
+                <div class="w-12 h-px bg-white/20 mb-8"></div>
+                <p class="text-gray-400 text-lg max-w-md leading-relaxed mb-10">
+                    Drive with assurance knowing standard and comprehensive plans cover you against every turn.
+                </p>
+                <a href="#" class="inline-flex items-center text-lg text-white hover:text-accent transition-colors duration-300 gap-3 group/link">
+                    Explore Coverage
+                    <span class="transform transition-transform duration-300 group-hover/link:translate-x-2">→</span>
+                </a>
+            </div>
+            <!-- Visual Side -->
+            <div class="relative h-full w-full min-h-[50vh] lg:min-h-auto order-2 overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-tr from-purple-950/20 via-black to-gray-900 z-10"></div>
+                <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-gray-800 via-gray-950 to-black opacity-90 scale-100 group-hover:scale-110 transition-transform duration-[3000ms] ease-out"></div>
+                <div class="absolute top-1/2 left-1/4 w-[500px] h-[500px] bg-purple-600/10 blur-[150px] rounded-full mix-blend-screen opacity-30 group-hover:opacity-50 transition-opacity duration-1000"></div>
+                <div class="absolute inset-0 bg-noise opacity-[0.03]"></div>
+            </div>
+        </div>
+
+        <!-- Service 4: Home Insurance (Visual Left, Text Right) -->
+        <div class="service-panel min-h-[70vh] w-full grid grid-cols-1 lg:grid-cols-2 group border-t border-white/5">
+            <!-- Visual Side -->
+            <div class="relative h-full w-full min-h-[50vh] lg:min-h-auto order-2 lg:order-1 overflow-hidden">
+                 <div class="absolute inset-0 bg-gradient-to-tl from-emerald-950/20 via-gray-950 to-black z-10"></div>
+                 <div class="absolute inset-0 bg-[conic-gradient(at_center,_var(--tw-gradient-stops))] from-black via-gray-900 to-gray-800 opacity-80 scale-100 group-hover:scale-110 transition-transform duration-[3000ms] ease-out"></div>
+                 <div class="absolute bottom-0 right-0 w-[600px] h-[600px] bg-emerald-500/5 blur-[120px] rounded-full mix-blend-screen opacity-30 group-hover:opacity-50 transition-opacity duration-1000"></div>
+                 <div class="absolute inset-0 bg-noise opacity-[0.03]"></div>
+            </div>
+             <!-- Text Side -->
+            <div class="flex flex-col justify-center px-8 md:px-24 py-20 order-1 lg:order-2 bg-black/20 backdrop-blur-sm">
+                <span class="text-accent font-mono text-sm tracking-[0.2em] uppercase mb-6">04 / Living</span>
+                <h2 class="text-6xl md:text-8xl font-serif text-white mb-4 leading-none tracking-tight">Home<br>Insurance</h2>
+                <p class="text-2xl text-gray-500 font-serif italic mb-8">"Security that stays home."</p>
+                <div class="w-12 h-px bg-white/20 mb-8"></div>
+                <p class="text-gray-400 text-lg max-w-md leading-relaxed mb-10">
+                    Protect your most valuable asset with policies that cover structure, contents, and liability.
+                </p>
+                <a href="#" class="inline-flex items-center text-lg text-white hover:text-accent transition-colors duration-300 gap-3 group/link">
+                    Calculate Premium
+                    <span class="transform transition-transform duration-300 group-hover/link:translate-x-2">→</span>
+                </a>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- Supporting Details Section (Full Width Band) -->
+    <div class="relative w-full py-32 border-t border-white/10 bg-gradient-to-b from-black to-gray-950 opacity-0 reveal-details">
+        <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+             <div>
+                 <h3 class="text-4xl md:text-5xl font-display font-bold text-white mb-6">Designed for Real-World<br>Insurance Needs</h3>
+             </div>
+             <div class="border-l border-white/10 pl-8 md:pl-16">
+                 <p class="text-gray-400 text-xl leading-relaxed mb-10">
+                     PolicySphere simplifies the complexity of protection. View detailed policies, calculate premiums instantly, and access flexible loan facilities or secure online payment options.
+                 </p>
+                 <!-- Final CTA -->
+                 <div class="flex flex-col items-start gap-3">
+                     <p class="text-white/80 font-medium tracking-wide text-sm uppercase">Ready to begin?</p>
+                     <a href="#" class="text-3xl font-serif italic text-white hover:text-accent transition-colors duration-300 group">
+                         Start with Premium Calculator <span class="inline-block transition-transform duration-300 group-hover:translate-x-2 text-2xl not-italic">→</span>
+                     </a>
+                 </div>
+             </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Register GSAP Plugin
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Intro
+            gsap.to(".intro-animate", {
+                opacity: 1,
+                y: 0,
+                duration: 1.2,
+                ease: "power3.out",
+                delay: 0.2
+            });
+
+            // Service Panels
+            gsap.utils.toArray('.service-panel').forEach((panel, i) => {
+                gsap.fromTo(panel, 
+                    { opacity: 0, y: 50 },
+                    {
+                        scrollTrigger: {
+                            trigger: panel,
+                            start: "top 80%",
+                            toggleActions: "play none none reverse"
+                        },
+                        opacity: 1,
+                        y: 0,
+                        duration: 1,
+                        ease: "power2.out"
+                    }
+                );
+            });
+
+            // Details Reveal
+            gsap.to(".reveal-details", {
+                 scrollTrigger: {
+                    trigger: ".reveal-details",
+                    start: "top 75%",
+                    toggleActions: "play none none reverse"
+                },
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                delay: 0.2,
+                ease: "power2.out"
+            });
+        });
+    </script>
+}

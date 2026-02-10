@@ -1,0 +1,124 @@
+@model E_project_Insu.Models.Scheme
+
+@{
+    ViewData["Title"] = "Edit Scheme";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="p-8 md:p-12 w-full max-w-4xl mx-auto">
+    
+    <!-- Header -->
+    <div class="mb-12 intro-animate opacity-0">
+        <a asp-action="Schemes" class="inline-flex items-center gap-2 text-gray-400 hover:text-accent transition-colors mb-6">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            Back to Schemes
+        </a>
+        <h1 class="text-3xl md:text-5xl font-display font-medium text-white mb-3">Edit Scheme</h1>
+        <p class="text-gray-500 font-light">Update scheme information and settings.</p>
+    </div>
+
+    <!-- Form -->
+    <div class="bg-[#0A0A0A] border border-white/5 rounded-2xl p-8 md:p-12 intro-animate opacity-0 delay-100">
+        <form asp-action="EditScheme" asp-route-id="@Model.SchemeId" method="post" class="space-y-8">
+            <input type="hidden" asp-for="SchemeId" />
+            
+            <!-- Scheme Name -->
+            <div>
+                <label asp-for="SchemeName" class="block text-sm font-medium text-gray-400 mb-3 uppercase tracking-wider">
+                    Scheme Name <span class="text-red-500">*</span>
+                </label>
+                <input asp-for="SchemeName" 
+                       class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white placeholder-gray-600 focus:outline-none focus:border-accent transition-colors"
+                       required />
+                <span asp-validation-for="SchemeName" class="text-red-500 text-sm mt-2"></span>
+            </div>
+
+            <!-- Insurance Type -->
+            <div>
+                <label asp-for="InsuranceType" class="block text-sm font-medium text-gray-400 mb-3 uppercase tracking-wider">
+                    Insurance Type <span class="text-red-500">*</span>
+                </label>
+                <select asp-for="InsuranceType" 
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white focus:outline-none focus:border-accent transition-colors"
+                        required>
+                    <option value="Life" class="bg-black">Life</option>
+                    <option value="Medical" class="bg-black">Medical</option>
+                    <option value="Motor" class="bg-black">Motor</option>
+                    <option value="Home" class="bg-black">Home</option>
+                </select>
+                <span asp-validation-for="InsuranceType" class="text-red-500 text-sm mt-2"></span>
+            </div>
+
+            <!-- Description -->
+            <div>
+                <label asp-for="Description" class="block text-sm font-medium text-gray-400 mb-3 uppercase tracking-wider">
+                    Description <span class="text-red-500">*</span>
+                </label>
+                <textarea asp-for="Description" 
+                          rows="5"
+                          class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white placeholder-gray-600 focus:outline-none focus:border-accent transition-colors resize-none"
+                          required></textarea>
+                <span asp-validation-for="Description" class="text-red-500 text-sm mt-2"></span>
+            </div>
+
+            <!-- Eligibility -->
+            <div>
+                <label asp-for="Eligibility" class="block text-sm font-medium text-gray-400 mb-3 uppercase tracking-wider">
+                    Eligibility Criteria <span class="text-red-500">*</span>
+                </label>
+                <textarea asp-for="Eligibility" 
+                          rows="4"
+                          class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white placeholder-gray-600 focus:outline-none focus:border-accent transition-colors resize-none"
+                          required></textarea>
+                <span asp-validation-for="Eligibility" class="text-red-500 text-sm mt-2"></span>
+            </div>
+
+            <!-- Status -->
+            <div>
+                <label asp-for="Status" class="block text-sm font-medium text-gray-400 mb-3 uppercase tracking-wider">
+                    Status <span class="text-red-500">*</span>
+                </label>
+                <select asp-for="Status" 
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white focus:outline-none focus:border-accent transition-colors"
+                        required>
+                    <option value="Active" class="bg-black">Active</option>
+                    <option value="Inactive" class="bg-black">Inactive</option>
+                </select>
+                <span asp-validation-for="Status" class="text-red-500 text-sm mt-2"></span>
+            </div>
+
+            <!-- Metadata Display -->
+            <div class="pt-6 border-t border-white/10">
+                <div class="text-xs text-gray-500 uppercase tracking-wider mb-2">Scheme ID</div>
+                <div class="text-white font-mono mb-4">@Model.SchemeId</div>
+                
+                <div class="text-xs text-gray-500 uppercase tracking-wider mb-2">Created Date</div>
+                <div class="text-white">@Model.CreatedDate.ToString("MMMM dd, yyyy 'at' hh:mm tt")</div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex gap-4 pt-6 border-t border-white/10">
+                <button type="submit" 
+                        class="flex-1 px-8 py-4 bg-accent text-black font-bold rounded-full hover:bg-accent/80 transition-colors uppercase tracking-wider">
+                    Update Scheme
+                </button>
+                <a asp-action="Schemes" 
+                   class="px-8 py-4 border border-white/20 text-white font-medium rounded-full hover:bg-white/5 transition-colors text-center">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        gsap.to(".intro-animate", { opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: "power2.out" });
+    });
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

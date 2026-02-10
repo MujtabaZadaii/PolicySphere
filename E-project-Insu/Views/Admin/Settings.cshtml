@@ -1,0 +1,70 @@
+@{
+    ViewData["Title"] = "Admin Settings";
+}
+
+<div class="p-8 max-w-4xl mx-auto">
+    <div class="mb-8">
+        <h1 class="text-3xl font-display font-bold text-white mb-2">Settings</h1>
+        <p class="text-gray-400">Manage your admin profile and security.</p>
+    </div>
+
+    <!-- Profile Card -->
+    <div class="bg-panel border border-white/10 rounded-2xl p-8 mb-8 flex items-center space-x-6">
+        <div class="w-20 h-20 bg-accent/20 rounded-full flex items-center justify-center text-accent">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+        </div>
+        <div>
+            <h2 class="text-xl font-bold text-white">Administrator</h2>
+            <p class="text-gray-400">admin@policysphere.com</p>
+            <span class="inline-block mt-2 px-3 py-1 bg-accent/10 border border-accent/20 text-accent rounded-full text-xs font-medium uppercase tracking-wider">Super Admin</span>
+        </div>
+    </div>
+
+    <!-- Change Password -->
+    <div class="bg-panel border border-white/10 rounded-2xl p-8">
+        <h3 class="text-xl font-bold text-white mb-6">Security</h3>
+        
+        @if (ViewBag.Success != null)
+        {
+            <div class="bg-green-500/10 border border-green-500/20 text-green-400 p-4 rounded-lg mb-6">
+                @ViewBag.Success
+            </div>
+        }
+
+        <!-- Profile Update Form -->
+        <form asp-action="UpdateSettings" method="post" class="space-y-6 mb-12 border-b border-white/5 pb-12">
+            <h4 class="text-lg font-bold text-white mb-4">Profile Details</h4>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2">Username / Name</label>
+                    <input type="text" name="Username" value="@Model.Username" required class="w-full bg-black border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2">Email Address</label>
+                    <input type="email" name="Email" value="@Model.Email" required class="w-full bg-black border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all" />
+                </div>
+            </div>
+
+            <div class="pt-2">
+                <button type="submit" class="bg-accent text-white font-bold py-3 px-6 rounded-lg hover:bg-accent/80 transition-colors shadow-[0_0_20px_rgba(172,88,233,0.3)]">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+
+        <h4 class="text-lg font-bold text-white mb-4">Password</h4>
+        <form asp-action="UpdateAdminPassword" method="post" class="space-y-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-400 mb-2">New Password</label>
+                <input type="password" name="newPassword" required class="w-full bg-black border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all" />
+            </div>
+            
+            <div class="pt-4">
+                <button type="submit" class="bg-white text-black font-bold py-3 px-6 rounded-lg hover:bg-gray-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                    Update Password
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,66 @@
+@model E_project_Insu.Models.Service
+@{
+    ViewData["Title"] = "Edit Service";
+    Layout = "_AdminLayout";
+}
+
+<div class="max-w-4xl mx-auto">
+    <div class="mb-8">
+        <a asp-action="ContentManager" class="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            Back to Content Manager
+        </a>
+    </div>
+
+    <div class="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-xl">
+        <h1 class="text-3xl font-bold text-white mb-8">Edit Service</h1>
+        
+        <form asp-action="EditService" method="post" class="space-y-6">
+            <input type="hidden" asp-for="ServiceId" />
+            <input type="hidden" asp-for="IsActive" />
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="group">
+                    <label asp-for="Title" class="block text-sm font-medium text-gray-400 mb-2">Title</label>
+                    <input asp-for="Title" class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" />
+                    <span asp-validation-for="Title" class="text-red-400 text-sm"></span>
+                </div>
+                
+                <div class="group">
+                    <label asp-for="Icon" class="block text-sm font-medium text-gray-400 mb-2">Icon (Emoji or Text)</label>
+                    <input asp-for="Icon" class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" />
+                    <span asp-validation-for="Icon" class="text-red-400 text-sm"></span>
+                </div>
+            </div>
+            
+            <div class="group">
+                <label asp-for="Description" class="block text-sm font-medium text-gray-400 mb-2">Description</label>
+                <textarea asp-for="Description" rows="4" class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all"></textarea>
+                <span asp-validation-for="Description" class="text-red-400 text-sm"></span>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="group">
+                    <label asp-for="ImageUrl" class="block text-sm font-medium text-gray-400 mb-2">Image URL</label>
+                    <input asp-for="ImageUrl" class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" />
+                    <span asp-validation-for="ImageUrl" class="text-red-400 text-sm"></span>
+                </div>
+                
+                <div class="group">
+                    <label asp-for="LinkUrl" class="block text-sm font-medium text-gray-400 mb-2">Link URL</label>
+                    <input asp-for="LinkUrl" class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" />
+                    <span asp-validation-for="LinkUrl" class="text-red-400 text-sm"></span>
+                </div>
+            </div>
+            
+            <div class="flex justify-end gap-4 pt-4">
+                <a asp-action="ContentManager" class="px-8 py-3 rounded-xl bg-white/10 text-white font-medium hover:bg-white/20 transition-all">Cancel</a>
+                <button type="submit" class="px-8 py-3 rounded-xl bg-accent text-white font-bold hover:bg-accent/80 transition-all shadow-lg hover:shadow-accent/40">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

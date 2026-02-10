@@ -1,0 +1,762 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<!-- Hero Section Container -->
+<div class="relative w-full min-h-screen flex flex-col justify-center overflow-hidden bg-transparent text-white selection:bg-accent selection:text-white pt-24 pb-12">
+    
+    <!-- Premium Hero Background -->
+    <div class="absolute inset-0 z-0 select-none pointer-events-none">
+        <img src="~/images/hero-bg.png" alt="" class="w-full h-full object-cover opacity-60 mix-blend-screen scale-110 motion-safe:animate-pulse-slow" />
+        <div class="absolute inset-0 bg-gradient-to-b from-black via-black/50 to-black"></div>
+        <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
+    </div>
+    
+    <!-- Dynamic Background Glow (Moved to _Layout.cshtml) -->
+
+    <!-- Main Content Wrapper -->
+    <div class="relative z-10 w-full max-w-[90rem] mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center h-full">
+        
+        <!-- Left: Huge Typography -->
+        <div class="col-span-12 lg:col-span-7 flex flex-col justify-center leading-none select-none mix-blend-lighten hero-text-container">
+            <div class="text-accent font-mono text-xs sm:text-sm tracking-[0.2em] mb-4 flex items-center gap-2 opacity-0 reveal-intro">
+                <span class="w-2 h-2 bg-accent rounded-full animate-pulse"></span>
+                TRUSTED INSURANCE PLATFORM
+            </div>
+
+            <h1 class="font-display font-bold uppercase tracking-tighter text-6xl sm:text-8xl md:text-8xl lg:text-[8rem] xl:text-[9rem] leading-[0.85]">
+                <div class="overflow-hidden"><span class="char-reveal inline-block translate-y-[110%] text-white">PROTECTION</span></div>
+                <div class="overflow-hidden flex items-baseline gap-2 md:gap-4">
+                    <span class="char-reveal inline-block translate-y-[110%] text-gray-500 font-serif italic font-light tracking-normal text-4xl sm:text-6xl align-middle lowercase">that</span>
+                    <span class="char-reveal inline-block translate-y-[110%] text-white">MATTERS</span>
+                </div>
+            </h1>
+        </div>
+
+        <!-- Right: Description & CTA -->
+        <div class="col-span-12 lg:col-span-5 flex flex-col justify-end items-start h-full pb-0 lg:pb-16 opacity-0 reveal-side translate-x-10 pl-0 lg:pl-10">
+            <p class="font-light text-gray-300 text-lg sm:text-xl leading-relaxed w-full mb-8">
+                We help individuals and families <span class="text-white font-medium">protect what matters most</span> through reliable life, medical, motor, and home <span class="text-accent italic font-serif">insurance solutions</span> designed for long-term security and peace of mind.
+            </p>
+
+            <div class="flex flex-col gap-4 w-full">
+                <div class="h-px w-full bg-gray-800"></div>
+                <div class="flex flex-col sm:flex-row justify-between gap-2 font-mono text-xs text-gray-400 uppercase tracking-widest">
+                    <span>AVAILABLE ONLINE 24/7</span>
+                    <span>SERVING CLIENTS NATIONWIDE</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Scrolling Marquee -->
+    <div class="absolute bottom-0 left-0 w-full py-4 border-t border-gray-900 bg-black/50 backdrop-blur-sm overflow-hidden whitespace-nowrap z-20">
+        <div class="inline-block animate-marquee font-mono text-xs sm:text-sm tracking-[5px] text-gray-500 uppercase">
+            Life Insurance &nbsp; — &nbsp; Medical Coverage &nbsp; — &nbsp; Motor Insurance &nbsp; — &nbsp; Home Protection &nbsp; — &nbsp; Fast Claims &nbsp; — &nbsp; 24/7 Support &nbsp; — &nbsp; Secure Future &nbsp; — &nbsp; Life Insurance &nbsp; — &nbsp; Medical Coverage &nbsp; — &nbsp; Motor Insurance &nbsp; — &nbsp; Home Protection
+        </div>
+        <div class="inline-block animate-marquee font-mono text-xs sm:text-sm tracking-[5px] text-gray-500 uppercase" aria-hidden="true">
+            &nbsp; — &nbsp; Fast Claims &nbsp; — &nbsp; 24/7 Support &nbsp; — &nbsp; Secure Future &nbsp; — &nbsp; Life Insurance &nbsp; — &nbsp; Medical Coverage &nbsp; — &nbsp; Motor Insurance &nbsp; — &nbsp; Home Protection &nbsp; — &nbsp; Fast Claims &nbsp; — &nbsp; 24/7 Support &nbsp; — &nbsp; Secure Future
+        </div>
+    </div>
+
+</div>
+
+<!-- Redesigned Core Benefits Section -->
+<section id="core-benefits" class="relative w-full bg-black py-32 z-20 overflow-hidden">
+    <div class="max-w-[95rem] mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+        <!-- Left: Static Editorial Content -->
+        <div class="col-span-12 lg:col-span-4 lg:sticky lg:top-32 self-start mb-12 lg:mb-0">
+             <div class="opacity-0 reveal-benefits-text translate-y-8">
+                 <h2 class="font-display font-bold text-5xl sm:text-7xl text-white uppercase leading-[0.85] mb-8 tracking-tight">
+                    Core <br> <span class="text-gray-500">Benefits</span>
+                 </h2>
+                 <div class="w-12 h-1 bg-accent/50 mb-8"></div>
+                 <p class="font-serif italic text-2xl text-gray-300 leading-normal mb-6">
+                    "Built on trust,<br> designed for resilience,<br> crafted for the future."
+                 </p>
+                 <p class="text-gray-500 font-light text-sm max-w-xs leading-relaxed">
+                    We don't just sell policies; we engineer confidence. Every aspect of our ecosystem is built to stand the test of time and uncertainty.
+                 </p>
+             </div>
+        </div>
+
+        <!-- Right: Cinematic Grid -->
+        <div class="col-span-12 lg:col-span-8 flex flex-col gap-6">
+            @if (ViewBag.Benefits != null && ViewBag.Benefits.Count > 0)
+            {
+                var benefitsList = ViewBag.Benefits as List<E_project_Insu.Models.Benefit>;
+                var firstBenefit = benefitsList?.FirstOrDefault();
+                var remainingBenefits = benefitsList?.Skip(1).ToList();
+                
+                <!-- Top Row -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 h-auto md:h-[600px]">
+                    @if (firstBenefit != null)
+                    {
+                        <!-- First Benefit (Hero) -->
+                        <div class="md:col-span-8 relative group overflow-hidden rounded-3xl opacity-0 reveal-benefit-panel translate-y-12">
+                            <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1200&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110" alt="@firstBenefit.Title">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-60"></div>
+                            <div class="absolute bottom-0 left-0 p-8 sm:p-12 w-full">
+                                <h3 class="font-display font-bold text-3xl sm:text-5xl text-white mb-2 transition-transform duration-500 group-hover:-translate-y-2">@firstBenefit.Title</h3>
+                                 <p class="text-gray-300 font-light text-sm sm:text-base max-w-md opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100">
+                                    @firstBenefit.Description
+                                </p>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Vertical Panels Container -->
+                     <div class="md:col-span-4 flex flex-col gap-6">
+                        @if (remainingBenefits != null)
+                        {
+                            @for (int i = 0; i < Math.Min(2, remainingBenefits.Count); i++)
+                            {
+                                var benefit = remainingBenefits[i];
+                                var imageUrl = i == 0 
+                                    ? "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=600&auto=format&fit=crop"
+                                    : "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=600&auto=format&fit=crop";
+                                
+                                <div class="flex-1 relative group overflow-hidden rounded-3xl opacity-0 reveal-benefit-panel translate-y-12">
+                                     <img src="@imageUrl" class="absolute inset-0 w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110" alt="@benefit.Title">
+                                     <div class="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors duration-500"></div>
+                                     <div class="absolute bottom-6 left-6 right-6">
+                                         <h3 class="font-display font-bold text-2xl text-white mb-1">@benefit.Title</h3>
+                                         <p class="text-gray-400 text-xs font-mono uppercase tracking-widest">@benefit.Description.Substring(0, Math.Min(30, benefit.Description.Length))...</p>
+                                     </div>
+                                </div>
+                            }
+                        }
+                     </div>
+                </div>
+
+                <!-- Bottom Row: Last Benefit (if exists) -->
+                @if (remainingBenefits != null && remainingBenefits.Count > 2)
+                {
+                    var lastBenefit = remainingBenefits[2];
+                    <div class="w-full h-[300px] relative group overflow-hidden rounded-3xl opacity-0 reveal-benefit-panel translate-y-12">
+                         <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=1200&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105 blur-[2px] group-hover:blur-0" alt="@lastBenefit.Title">
+                         <div class="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors duration-500"></div>
+                         <div class="absolute inset-0 flex flex-col justify-center items-center text-center p-6">
+                             <div class="bg-white/10 backdrop-blur-md border border-white/10 px-6 py-2 rounded-full mb-6 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                                 <span class="font-mono text-xs uppercase tracking-[0.2em] text-accent">@lastBenefit.Number</span>
+                             </div>
+                             <h3 class="font-display font-bold text-5xl sm:text-6xl text-white mb-4 tracking-tighter">@lastBenefit.Title.ToUpper()</h3>
+                             <p class="text-gray-300 max-w-lg mx-auto opacity-70 group-hover:opacity-100 transition-opacity duration-500">
+                                 @lastBenefit.Description
+                             </p>
+                         </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <!-- Fallback if no benefits -->
+                <div class="text-center py-20">
+                    <p class="text-gray-500">No benefits available at the moment.</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+
+<!-- Redesigned Insurance Services Section -->
+<section id="services" class="relative w-full py-32 bg-black overflow-hidden z-20">
+    <!-- Cinematic Background Ambient Noise & Glow -->
+    <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute top-0 left-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+        <div class="absolute top-1/4 left-0 w-[500px] h-[500px] bg-purple-900/40 rounded-full blur-[120px] mix-blend-screen animate-pulse-slow"></div>
+        <div class="absolute bottom-1/4 right-0 w-[600px] h-[600px] bg-accent/20 rounded-full blur-[140px] mix-blend-screen"></div>
+    </div>
+
+    <!-- Section Header (Editorial Style) -->
+    <div class="relative z-10 max-w-[90rem] mx-auto px-6 mb-16 lg:mb-24 text-center lg:text-left">
+        <div class="inline-block relative">
+            <h2 class="font-display font-bold text-5xl sm:text-7xl lg:text-8xl text-white tracking-tight leading-[0.85] opacity-0 reveal-services-header">
+                OUR <br />
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent to-purple-400">SERVICES</span>
+            </h2>
+            <div class="h-1 w-full bg-accent/50 mt-4 origin-left scale-x-0 reveal-services-line"></div>
+        </div>
+        <p class="font-light text-gray-400 text-lg mt-8 max-w-xl opacity-0 reveal-services-text">
+            Experience insurance that feels less like a contract and more like a promise. Tailored for the modern world.
+        </p>
+    </div>
+
+    <!-- Cinematic Panels Container (Accordion Layout) -->
+    <div class="relative z-10 w-full max-w-[95rem] mx-auto px-0 lg:px-6">
+        <div class="flex flex-col lg:flex-row gap-0 lg:gap-1 h-auto lg:h-[750px] w-full service-container">
+            
+            @if (ViewBag.Services != null && ViewBag.Services.Count > 0)
+            {
+                var servicesList = ViewBag.Services as List<E_project_Insu.Models.Service>;
+                int serviceIndex = 1;
+                
+                foreach (var service in servicesList)
+                {
+                    var serviceNumber = serviceIndex.ToString("D2");
+                    var serviceType = service.Title.Replace(" Insurance", "").Replace(" ", "");
+                    
+                    <!-- Service Panel -->
+                    <div class="service-panel group relative flex-1 min-h-[500px] lg:min-h-0 lg:h-full overflow-hidden transition-[flex] duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] lg:hover:flex-[2.5] border-b lg:border-b-0 lg:border-r border-white/10 last:border-0 opacity-0 translate-y-12">
+                        <!-- Background -->
+                        <div class="absolute inset-0 bg-black">
+                             <img src="@service.ImageUrl" class="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-70 group-hover:scale-105 transition-all duration-1000 ease-out grayscale group-hover:grayscale-0" alt="@service.Title" />
+                             <div class="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-l from-black via-black/60 to-transparent opacity-90 transition-opacity duration-700"></div>
+                        </div>
+                        
+                        @if (serviceIndex % 2 == 0)
+                        {
+                            <!-- Interactive Noise Overlay on Hover -->
+                            <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-0 group-hover:opacity-20 transition-opacity duration-700 mix-blend-overlay"></div>
+                        }
+                        
+                        <!-- Content -->
+                        <div class="absolute inset-0 p-8 lg:p-12 flex flex-col justify-end items-start">
+                             <!-- ID -->
+                             <div class="mb-auto opacity-70 group-hover:opacity-100 transition-opacity duration-500 hidden lg:block">
+                                <span class="font-mono text-xs uppercase tracking-[0.2em] border border-white/30 px-3 py-1 rounded-full backdrop-blur-md">@serviceNumber — @serviceType</span>
+                             </div>
+
+                             <!-- Wrapper for slide animation -->
+                             <div class="relative z-20 w-full lg:max-w-md transform translate-y-0 lg:translate-y-8 group-hover:translate-y-0 transition-transform duration-700 ease-out">
+                                <h3 class="font-display font-bold text-5xl lg:text-7xl text-white leading-[0.9] mb-4 tracking-tighter mix-blend-screen">@service.Title.Replace(" Insurance", "").ToUpper()</h3>
+                                
+                                <div class="overflow-hidden mb-6">
+                                    <p class="font-serif italic text-2xl lg:text-3xl text-gray-300 group-hover:text-white transition-colors duration-500 leading-tight">
+                                        "@service.Icon @service.Title"
+                                    </p>
+                                </div>
+                                
+                                <!-- Description & CTA -->
+                                <div class="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-700 ease-out">
+                                    <div class="overflow-hidden">
+                                        <div class="pt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100">
+                                            <p class="text-gray-400 font-light text-sm lg:text-base leading-relaxed mb-6 border-l-2 border-accent pl-4">
+                                                @service.Description
+                                            </p>
+                                            <a href="@service.LinkUrl" class="inline-flex items-center gap-3 text-white uppercase tracking-[0.2em] text-xs font-bold hover:text-accent transition-colors group/btn pb-1 border-b border-transparent hover:border-accent">
+                                                Explore @serviceType Coverage
+                                                <span class="text-lg leading-none group-hover/btn:translate-x-2 transition-transform duration-300">→</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                    
+                    serviceIndex++;
+                }
+            }
+            else
+            {
+                <!-- Fallback if no services -->
+                <div class="text-center py-20 w-full">
+                    <p class="text-gray-500">No services available at the moment.</p>
+                </div>
+            }
+
+        </div>
+    </div>
+</section>
+
+<!-- Journey Section -->
+<section id="journey" class="relative w-full py-32 bg-black overflow-hidden z-20">
+    <!-- Background Elements -->
+    <div class="absolute inset-0 pointer-events-none">
+         <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-overlay"></div>
+         <div class="journey-glow absolute top-1/2 right-0 w-[800px] h-[800px] bg-accent/20 rounded-full blur-[150px] mix-blend-screen translate-x-1/2 -translate-y-1/2 transition-all duration-1000 ease-out"></div>
+    </div>
+    
+    <div class="max-w-[90rem] mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <!-- Left: Story -->
+        <div class="opacity-0 reveal-journey-left -translate-x-10">
+             <h2 class="font-display font-bold text-5xl sm:text-7xl text-white leading-[0.9] mb-8">
+                Every protection <br> begins with a <br> <span class="text-accent italic font-serif">decision.</span>
+             </h2>
+             <p class="text-xl text-gray-400 font-light italic mb-12 border-l border-white/20 pl-6">
+                "Choose what matters.<br> We'll take care of the rest."
+             </p>
+        </div>
+
+        <!-- Right: Interactive Panel -->
+        <div class="relative opacity-0 reveal-journey-right translate-y-10">
+            <!-- Glass Panel -->
+            <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden group hover:border-accent/30 transition-colors duration-500">
+                <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
+                
+                <!-- Inputs -->
+                <div class="space-y-10 relative z-10">
+                    <!-- 1. Type Selection -->
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-gray-500 mb-4">Coverage Type</label>
+                        <div class="flex flex-wrap gap-2">
+                            <button class="journey-type-btn active px-6 py-2 rounded-full border border-accent/50 bg-accent text-white text-sm font-medium transition-all" data-type="life">Life</button>
+                            <button class="journey-type-btn px-6 py-2 rounded-full border border-white/10 text-gray-400 hover:text-white hover:border-white/30 text-sm font-medium transition-all" data-type="medical">Medical</button>
+                            <button class="journey-type-btn px-6 py-2 rounded-full border border-white/10 text-gray-400 hover:text-white hover:border-white/30 text-sm font-medium transition-all" data-type="motor">Motor</button>
+                            <button class="journey-type-btn px-6 py-2 rounded-full border border-white/10 text-gray-400 hover:text-white hover:border-white/30 text-sm font-medium transition-all" data-type="home">Home</button>
+                        </div>
+                    </div>
+
+                    <!-- 2. Age & Level -->
+                    <div class="grid grid-cols-2 gap-8">
+                         <div>
+                            <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Your Age</label>
+                            <input type="number" value="30" class="w-full bg-transparent text-4xl font-display text-white focus:outline-none border-b border-white/10 focus:border-accent transition-colors pb-2" id="journey-age">
+                         </div>
+                         <div>
+                            <label class="block text-xs uppercase tracking-widest text-gray-500 mb-4">Level</label>
+                             <div class="flex items-center gap-4 text-sm text-gray-400 font-medium">
+                                <label class="cursor-pointer hover:text-white transition-colors"><input type="radio" name="level" value="0.8" class="hidden journey-level"> Low</label>
+                                <label class="cursor-pointer hover:text-white transition-colors text-white"><input type="radio" name="level" value="1.0" checked class="hidden journey-level"> Balanced</label>
+                                <label class="cursor-pointer hover:text-white transition-colors"><input type="radio" name="level" value="1.5" class="hidden journey-level"> Premium</label>
+                             </div>
+                         </div>
+                    </div>
+
+                    <!-- 3. Sum Assured Slider -->
+                    <div>
+                        <div class="flex justify-between items-end mb-4">
+                            <label class="text-xs uppercase tracking-widest text-gray-500">Sum Assured</label>
+                            <span class="text-white font-mono text-lg" id="sum-display">$100,000</span>
+                        </div>
+                        <style>
+                            .slider-thumb-accent::-webkit-slider-thumb {
+                                -webkit-appearance: none;
+                                appearance: none;
+                                width: 24px;
+                                height: 24px;
+                                border-radius: 50%;
+                                background: #AC58E9;
+                                cursor: pointer;
+                                box-shadow: 0 0 15px rgba(172, 88, 233, 0.5);
+                                transition: all 0.3s;
+                            }
+                            .slider-thumb-accent::-webkit-slider-thumb:hover {
+                                transform: scale(1.2);
+                                box-shadow: 0 0 25px rgba(172, 88, 233, 0.8);
+                            }
+                        </style>
+                        <input type="range" min="10000" max="1000000" step="5000" value="100000" class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer slider-thumb-accent" id="journey-slider">
+                    </div>
+
+                    <!-- Result -->
+                    <div class="pt-8 border-t border-white/10">
+                        <p class="text-sm text-gray-400 mb-2">Your estimated protection</p>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-lg text-accent self-start">$</span>
+                            <span class="text-6xl font-display font-bold text-white tracking-tight" id="premium-display">50</span>
+                            <span class="text-gray-500 text-sm">/month</span>
+                        </div>
+                        <a href="#" class="inline-block mt-6 text-xs uppercase tracking-[0.2em] text-white hover:text-accent border-b border-transparent hover:border-accent transition-all pb-1">
+                            View Detailed Breakdown →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Exclusive Advantage (Promo) Section - Refined -->
+<section id="promo" class="relative w-full py-40 bg-[#050505] overflow-hidden border-t border-white/5">
+    <!-- Subtle Vignette & Ambient Light -->
+    <div class="absolute inset-0 pointer-events-none">
+         <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/80"></div>
+         <!-- Attractive Purple Blur -->
+         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-accent/20 rounded-full blur-[120px] mix-blend-screen"></div>
+         <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-purple-900/20 rounded-full blur-[100px] mix-blend-screen"></div>
+    </div>
+
+    <div class="max-w-3xl mx-auto px-6 relative z-10 text-center opacity-0 reveal-promo">
+        <h3 class="text-gray-500 font-mono text-xs uppercase tracking-[0.2em] mb-8">
+            Limited Period Benefit
+        </h3>
+        
+        <h2 class="font-display font-medium text-4xl sm:text-5xl text-white mb-8 tracking-tight leading-snug">
+            An Added Advantage for <br> Early Applications
+        </h2>
+        
+        <p class="text-lg text-gray-400 font-light leading-relaxed mb-10 max-w-xl mx-auto">
+            Applications submitted during this period receive priority review and reduced processing requirements, helping you move forward with clarity and confidence.
+        </p>
+
+        <div class="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-16 text-sm text-gray-400/80 font-medium">
+            <span>Priority review</span>
+            <span class="text-white/10">•</span>
+            <span>Reduced processing</span>
+            <span class="text-white/10">•</span>
+            <span>Guided onboarding</span>
+        </div>
+
+        <a href="@Url.Action("Signup", "Home")" class="inline-flex items-center gap-3 px-8 py-3 text-white/90 text-sm tracking-widest uppercase border border-white/10 rounded-full hover:bg-white/5 hover:border-white/20 hover:text-white transition-all duration-500 group">
+            Proceed with Priority Review
+            <span class="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">→</span>
+        </a>
+    </div>
+</section>
+
+<!-- Insights & Updates Section -->
+<section id="insights" class="relative w-full bg-black py-40 z-20 border-t border-white/5">
+    <div class="max-w-[90rem] mx-auto px-6">
+        <!-- Header -->
+        <div class="text-center mb-32 opacity-0 reveal-insights-header">
+            <h2 class="font-display font-bold text-4xl sm:text-6xl text-white mb-6 tracking-tight">Insights & Updates</h2>
+            <div class="h-px w-24 bg-white/20 mx-auto mb-6"></div>
+            <p class="font-serif italic text-xl text-gray-400">"Thoughtfully designed coverage evolving with your life"</p>
+        </div>
+
+        @if (ViewBag.Insights != null && ViewBag.Insights.Count > 0)
+        {
+            <div class="flex flex-col gap-32">
+                @{
+                    int index = 0;
+                }
+                @foreach (var insight in ViewBag.Insights)
+                {
+                    bool isEven = index % 2 == 0;
+                    
+                    if (isEven)
+                    {
+                        <!-- Editorial Block (Image Left) -->
+                        <div class="group grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center opacity-0 reveal-insight-item">
+                            <div class="lg:col-span-7 relative overflow-hidden rounded-sm aspect-[16/9] lg:aspect-[21/9]">
+                                @if (!string.IsNullOrEmpty(insight.ImageUrl))
+                                {
+                                    <img src="@insight.ImageUrl" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105 opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-80" alt="@insight.Title">
+                                }
+                                else
+                                {
+                                    <div class="absolute inset-0 bg-gradient-to-br from-accent/20 to-purple-900/20"></div>
+                                }
+                                <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500"></div>
+                            </div>
+                            <div class="lg:col-span-5 text-left">
+                                <span class="text-accent text-xs font-mono uppercase tracking-widest mb-4 block">@insight.Category</span>
+                                <h3 class="text-3xl sm:text-4xl font-display text-white mb-6 leading-tight">@insight.Title</h3>
+                                <p class="text-gray-400 font-light text-lg mb-8 leading-relaxed max-w-md line-clamp-3">
+                                    @insight.Content
+                                </p>
+                                <a href="@Url.Action("Details", "Insights", new { id = insight.InsightId })" class="inline-block text-white uppercase tracking-[0.2em] text-xs border-b border-white/20 pb-1 hover:border-accent hover:text-accent transition-all group-hover:pl-2">
+                                    Read Update →
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Editorial Block (Image Right - Inverted) -->
+                        <div class="group grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center opacity-0 reveal-insight-item">
+                            <div class="lg:col-span-5 lg:order-1 order-2 text-left lg:text-right">
+                                <span class="text-accent text-xs font-mono uppercase tracking-widest mb-4 block">@insight.Category</span>
+                                <h3 class="text-3xl sm:text-4xl font-display text-white mb-6 leading-tight">@insight.Title</h3>
+                                <p class="text-gray-400 font-light text-lg mb-8 leading-relaxed ml-auto max-w-md line-clamp-3">
+                                    @insight.Content
+                                </p>
+                                <a href="@Url.Action("Details", "Insights", new { id = insight.InsightId })" class="inline-block text-white uppercase tracking-[0.2em] text-xs border-b border-white/20 pb-1 hover:border-accent hover:text-accent transition-all group-hover:pr-2">
+                                    ← Explore Details
+                                </a>
+                            </div>
+                            <div class="lg:col-span-7 lg:order-2 order-1 relative overflow-hidden rounded-sm aspect-[16/9] lg:aspect-[21/9]">
+                                @if (!string.IsNullOrEmpty(insight.ImageUrl))
+                                {
+                                    <img src="@insight.ImageUrl" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105 opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-80" alt="@insight.Title">
+                                }
+                                else
+                                {
+                                    <div class="absolute inset-0 bg-gradient-to-br from-accent/20 to-purple-900/20"></div>
+                                }
+                                <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500"></div>
+                            </div>
+                        </div>
+                    }
+                    
+                    index++;
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-20">
+                <p class="text-gray-500 text-lg">No updates available at the moment.</p>
+            </div>
+        }
+
+        <div class="mt-32 text-center opacity-0 reveal-insight-item">
+             <a href="@Url.Action("Index", "Insights")" class="px-8 py-3 border border-white/10 rounded-full text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all duration-300">View All Updates</a>
+        </div>
+    </div>
+</section>
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", (event) => {
+        // Register GSAP plugins
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- ENTRANCE ANIMATIONS ---
+        // --- ENTRANCE ANIMATIONS ---
+        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+        // --- CORE BENEFITS ANIMATIONS ---
+        gsap.to(".reveal-benefits-text", {
+             scrollTrigger: {
+                 trigger: "#core-benefits",
+                 start: "top 60%",
+             },
+             autoAlpha: 1,
+             y: 0,
+             duration: 1,
+             ease: "power3.out"
+        });
+
+        gsap.to(".reveal-benefit-panel", {
+            scrollTrigger: {
+                 trigger: "#core-benefits",
+                 start: "top 60%",
+            },
+            autoAlpha: 1,
+            y: 0,
+            duration: 1,
+            stagger: 0.15,
+            ease: "power3.out"
+        });
+
+        // 1. Reveal Intro Text (top left)
+        tl.to(".reveal-intro", { 
+            autoAlpha: 1, 
+            y: 0, 
+            duration: 1 
+        });
+
+        // 2. Reveal Huge Title Characters
+        tl.to(".char-reveal", {
+            y: "0%",
+            duration: 1.2,
+            stagger: 0.05,
+            ease: "expo.out"
+        }, "-=0.5");
+
+        // 3. Reveal Side Content (Description & CTA)
+        tl.to(".reveal-side", {
+            autoAlpha: 1,
+            x: 0,
+            duration: 1
+        }, "-=0.8");
+
+        // --- SCROLL ANIMATIONS (SERVICES) ---
+        
+        // 1. Header & Text
+        const serviceTl = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#services",
+                start: "top 70%",
+            }
+        });
+        
+        serviceTl.to(".reveal-services-header", {
+            autoAlpha: 1,
+            y: 0,
+            duration: 1,
+            ease: "power3.out"
+        })
+        .to(".reveal-services-line", {
+            scaleX: 1,
+            duration: 0.8,
+            ease: "expo.out"
+        }, "-=0.5")
+        .to(".reveal-services-text", {
+             autoAlpha: 1,
+             y: 0,
+             duration: 1
+        }, "-=0.6");
+
+        // 2. Panels (Staggered Entrance)
+        gsap.to(".service-panel", {
+            scrollTrigger: {
+                trigger: ".service-container",
+                start: "top 75%",
+            },
+            autoAlpha: 1,
+            y: 0,
+            duration: 1,
+            stagger: 0.15,
+            ease: "power3.out"
+        });
+
+        // --- JOURNEY SECTION ANIMATIONS ---
+        gsap.to(".reveal-journey-left", {
+            scrollTrigger: {
+                trigger: "#journey",
+                start: "top 70%",
+            },
+            autoAlpha: 1,
+            x: 0,
+            duration: 1,
+            ease: "power3.out"
+        });
+
+        gsap.to(".reveal-journey-right", {
+            scrollTrigger: {
+               trigger: "#journey",
+               start: "top 70%",
+            },
+            autoAlpha: 1,
+            y: 0,
+            duration: 1.2,
+            delay: 0.2,
+            ease: "power3.out"
+        });
+
+        // --- INSIGHTS ANIMATIONS ---
+        gsap.to(".reveal-insights-header", {
+            scrollTrigger: {
+                 trigger: "#insights",
+                 start: "top 75%",
+            },
+            autoAlpha: 1,
+            y: 0,
+            duration: 1,
+            ease: "power3.out"
+        });
+
+        gsap.utils.toArray(".reveal-insight-item").forEach(item => {
+            gsap.fromTo(item, 
+                { autoAlpha: 0, y: 50 },
+                {
+                    scrollTrigger: {
+                        trigger: item,
+                        start: "top 80%",
+                    },
+                    autoAlpha: 1,
+                    y: 0,
+                    duration: 1.2,
+                    ease: "power3.out"
+                }
+            );
+        });
+
+        // --- PROMO ANIMATION ---
+        gsap.to(".reveal-promo", {
+            scrollTrigger: {
+                trigger: "#promo",
+                start: "top 75%",
+            },
+            autoAlpha: 1,
+            y: 0,
+            duration: 1.2,
+            ease: "power3.out"
+        });
+
+        // --- INTERACTIVE CALCULATOR LOGIC ---
+        const slider = document.getElementById('journey-slider');
+        const sumDisplay = document.getElementById('sum-display');
+        const premiumDisplay = document.getElementById('premium-display');
+        const ageInput = document.getElementById('journey-age');
+        const typeBtns = document.querySelectorAll('.journey-type-btn');
+        const levelInputs = document.querySelectorAll('.journey-level');
+        const journeyGlow = document.querySelector('.journey-glow');
+
+        let currentType = 'life';
+        let currentLevel = 1.0;
+        let baseRate = 0.0005; // Base rate for Life
+
+        // Type Selection
+        typeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // UI Update
+                typeBtns.forEach(b => {
+                    b.classList.remove('bg-accent', 'text-white', 'border-accent/50');
+                    b.classList.add('text-gray-400', 'border-white/10');
+                });
+                btn.classList.remove('text-gray-400', 'border-white/10');
+                btn.classList.add('bg-accent', 'text-white', 'border-accent/50');
+                
+                // Logic Update
+                currentType = btn.dataset.type;
+                updateCalculator();
+            });
+        });
+
+        // Level Selection
+        levelInputs.forEach(input => {
+            input.parentElement.addEventListener('click', () => {
+                // UI Update (Radio fix)
+                levelInputs.forEach(i => i.parentElement.classList.remove('text-white'));
+                input.parentElement.classList.add('text-white');
+                input.checked = true;
+                
+                currentLevel = parseFloat(input.value);
+                updateCalculator();
+            });
+        });
+
+        // Slider & Age Input
+        slider.addEventListener('input', () => {
+             updateCalculator();
+             // Dynamic Glow Position based on slider
+             const val = (slider.value - slider.min) / (slider.max - slider.min);
+             gsap.to(journeyGlow, {
+                 opacity: 0.2 + (val * 0.3), // Brighten as value increases
+                 scale: 1 + (val * 0.2),
+                 duration: 0.5
+             });
+        });
+        ageInput.addEventListener('input', updateCalculator);
+
+        function updateCalculator() {
+            const sum = parseInt(slider.value);
+            const age = parseInt(ageInput.value) || 30;
+            
+            // Format Sum Display
+            sumDisplay.innerText = '$' + sum.toLocaleString();
+
+            // Backend Call
+            const formData = new FormData();
+            formData.append('type', currentType);
+            formData.append('age', age);
+            formData.append('sumAssured', sum);
+            formData.append('level', currentLevel);
+
+            fetch('/Home/CalculateQuote', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Animate Number
+                gsap.to(premiumDisplay, {
+                    innerText: data.premium,
+                    duration: 0.5,
+                    snap: { innerText: 1 }
+                });
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // --- MOUSE PARALLAX (HERO) ---
+        const heroContainer = document.querySelector('.hero-text-container');
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5);
+            const y = (e.clientY / window.innerHeight - 0.5);
+            
+            if(heroContainer) {
+                gsap.to(heroContainer, {
+                    x: x * -20,
+                    y: y * -20,
+                    duration: 1.5,
+                    ease: "power2.out"
+                });
+            }
+        });
+
+
+    });
+</script>

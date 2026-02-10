@@ -1,0 +1,156 @@
+@{
+    ViewData["Title"] = "Account Settings";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    var userEmail = Context.Session.GetString("UserEmail") ?? "user@example.com";
+    var userRole = Context.Session.GetString("Role") ?? "PolicyHolder";
+}
+@model E_project_Insu.Models.User
+
+<div class="p-8 md:p-12 w-full max-w-5xl mx-auto">
+    
+    <!-- Header -->
+    <div class="mb-12 intro-animate opacity-0">
+        <h1 class="text-3xl md:text-5xl font-display font-medium text-white mb-3">Account Settings</h1>
+        <p class="text-gray-500 font-light text-sm max-w-2xl">
+            Manage your personal profile and security preferences.
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 intro-animate opacity-0 delay-100">
+        
+        <!-- Left Column: Navigation & Status -->
+        <div class="space-y-8">
+            <!-- Account Status Card -->
+            <div class="bg-[#0A0A0A] border border-white/5 rounded-2xl p-6">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center text-accent font-bold text-xl">
+                        @userEmail.Substring(0, 1).ToUpper()
+                    </div>
+                    <div>
+                        <p class="text-white font-medium">@userEmail</p>
+                        <p class="text-xs text-gray-500">@userRole</p>
+                    </div>
+                </div>
+                <div class="space-y-3 border-t border-white/5 pt-4">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-500">Status</span>
+                        <span class="text-green-500 bg-green-500/10 px-2 py-0.5 rounded textxs uppercase tracking-wider font-bold text-[10px]">Active</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-500">Member Since</span>
+                        <span class="text-gray-300">Jan 2024</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="bg-[#0A0A0A] border border-white/5 rounded-2xl p-1 overflow-hidden">
+                <button onclick="showSection('profile')" class="tab-btn w-full text-left px-5 py-3 rounded-xl text-sm font-medium text-white bg-white/5 border border-white/5 transition-colors mb-1">
+                    Profile Information
+                </button>
+                <button onclick="showSection('security')" class="tab-btn w-full text-left px-5 py-3 rounded-xl text-sm font-medium text-gray-400 hover:text-white transition-colors">
+                    Security & Password
+                </button>
+            </div>
+            
+             <a asp-controller="User" asp-action="Logout" class="block text-center w-full py-3 rounded-xl border border-red-500/20 text-red-500 text-sm hover:bg-red-500/10 transition-colors">
+                Sign Out
+            </a>
+        </div>
+
+        <!-- Right Column: Forms -->
+        <div class="lg:col-span-2">
+            
+            <!-- Profile Section -->
+            <form method="post" asp-action="Settings" class="space-y-6">
+                 @if (ViewBag.Success != null)
+                 {
+                    <div class="bg-green-500/10 border border-green-500/20 text-green-500 p-4 rounded-lg text-sm mb-6">
+                        @ViewBag.Success
+                    </div>
+                 }
+                <div id="profileSection" class="settings-content transition-all duration-500">
+                    <h2 class="text-2xl font-display text-white mb-6">Profile Information</h2>
+                    
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="text-[10px] uppercase tracking-widest text-gray-500 font-semibold">First Name</label>
+                                <input type="text" asp-for="FirstName" class="w-full bg-[#0F0F0F] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent transition-colors">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[10px] uppercase tracking-widest text-gray-500 font-semibold">Last Name</label>
+                                <input type="text" asp-for="LastName" class="w-full bg-[#0F0F0F] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent transition-colors">
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-[10px] uppercase tracking-widest text-gray-500 font-semibold">Email Address</label>
+                            <input type="email" asp-for="Email" readonly class="w-full bg-[#050505] border border-white/5 rounded-xl px-4 py-3 text-gray-500 cursor-not-allowed">
+                            <p class="text-[10px] text-gray-600">Contact support to change your email address.</p>
+                        </div>
+
+                        <div class="pt-4 flex items-center justify-end">
+                            <button type="submit" class="px-8 py-2.5 bg-white text-black font-medium rounded-full hover:bg-gray-200 transition-colors">
+                                Save Changes
+                            </button>
+                        </div>
+                </div>
+
+                <!-- Security Section (Hidden by default) -->
+                <div id="securitySection" class="settings-content hidden opacity-0 transition-all duration-500">
+                    <h2 class="text-2xl font-display text-white mb-6">Security Settings</h2>
+                    <div class="space-y-6 max-w-md">
+                        
+                        <div class="space-y-2">
+                            <label class="text-[10px] uppercase tracking-widest text-gray-500 font-semibold">New Password</label>
+                            <input type="password" name="newPassword" minlength="4" class="w-full bg-[#0F0F0F] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent transition-colors">
+                        </div>
+
+                        <div class="pt-4 flex items-center justify-end">
+                             <button type="submit" class="px-8 py-2.5 bg-white text-black font-medium rounded-full hover:bg-gray-200 transition-colors">
+                                Update Password
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        gsap.to(".intro-animate", { opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: "power2.out" });
+    });
+
+    function showSection(section) {
+        // Toggle Buttons
+        const buttons = document.querySelectorAll('.tab-btn');
+        buttons.forEach(btn => {
+            btn.classList.remove('bg-white/5', 'border-white/5', 'text-white');
+            btn.classList.add('text-gray-400');
+        });
+        
+        // Active Button styling - Simplified logic for demonstration
+        event.target.classList.add('bg-white/5', 'border-white/5', 'text-white');
+        event.target.classList.remove('text-gray-400');
+
+        // Toggle Content
+        const profile = document.getElementById('profileSection');
+        const security = document.getElementById('securitySection');
+
+        if (section === 'profile') {
+            security.classList.add('hidden', 'opacity-0');
+            profile.classList.remove('hidden');
+            setTimeout(() => profile.classList.remove('opacity-0'), 50);
+        } else {
+            profile.classList.add('hidden', 'opacity-0');
+            security.classList.remove('hidden');
+            setTimeout(() => security.classList.remove('opacity-0'), 50);
+        }
+    }
+
+    // Simplified removal of JS submits
+
+</script>

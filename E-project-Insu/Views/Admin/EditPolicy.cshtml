@@ -1,0 +1,76 @@
+@model E_project_Insu.Models.Policy
+
+@{
+    ViewData["Title"] = "Edit Policy";
+}
+
+<div class="p-8 max-w-4xl mx-auto">
+    <div class="mb-8">
+        <a asp-action="Policies" class="text-gray-400 hover:text-white mb-4 inline-block transition-colors">&larr; Back to Policies</a>
+        <h1 class="text-3xl font-display font-bold text-white">Edit Policy</h1>
+        <p class="text-gray-400">@Model.PolicyNumber</p>
+    </div>
+
+    <div class="bg-panel border border-white/10 rounded-2xl p-8">
+        <form asp-action="EditPolicy" method="post" class="space-y-6">
+            <input type="hidden" asp-for="PolicyId" />
+            <div asp-validation-summary="ModelOnly" class="text-red-500 text-sm"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Policy Type -->
+                <div>
+                    <label asp-for="PolicyType" class="block text-sm font-medium text-gray-400 mb-2">Policy Type</label>
+                    <select asp-for="PolicyType" class="w-full bg-black border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all">
+                        <option value="Life">Life Insurance</option>
+                        <option value="Medical">Medical Insurance</option>
+                        <option value="Motor">Motor Insurance</option>
+                        <option value="Home">Home Insurance</option>
+                    </select>
+                </div>
+
+                <!-- Coverage -->
+                <div>
+                    <label asp-for="CoverageAmount" class="block text-sm font-medium text-gray-400 mb-2">Coverage Amount (USD)</label>
+                    <input asp-for="CoverageAmount" type="number" class="w-full bg-black border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all" />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Premium -->
+                <div>
+                    <label asp-for="PremiumAmount" class="block text-sm font-medium text-gray-400 mb-2">Premium Amount (USD)</label>
+                    <input asp-for="PremiumAmount" type="number" class="w-full bg-black border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all" />
+                </div>
+
+                <!-- Status -->
+                <div>
+                    <label asp-for="Status" class="block text-sm font-medium text-gray-400 mb-2">Status</label>
+                    <select asp-for="Status" class="w-full bg-black border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all">
+                        <option value="Active">Active</option>
+                        <option value="Expired">Expired</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Start Date -->
+                <div>
+                    <label asp-for="StartDate" class="block text-sm font-medium text-gray-400 mb-2">Start Date</label>
+                    <input asp-for="StartDate" type="date" class="w-full bg-black border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all" />
+                </div>
+
+                <!-- End Date -->
+                <div>
+                    <label asp-for="EndDate" class="block text-sm font-medium text-gray-400 mb-2">End Date</label>
+                    <input asp-for="EndDate" type="date" class="w-full bg-black border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all" />
+                </div>
+            </div>
+
+            <div class="pt-4">
+                <button type="submit" class="w-full bg-accent hover:bg-opacity-90 text-white font-bold py-3 px-6 rounded-lg shadow-[0_0_20px_rgba(172,88,233,0.3)] hover:shadow-[0_0_30px_rgba(172,88,233,0.5)] transition-all transform hover:-translate-y-1">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
