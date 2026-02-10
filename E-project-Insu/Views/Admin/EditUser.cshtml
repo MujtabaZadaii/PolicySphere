@@ -1,0 +1,85 @@
+@model E_project_Insu.Models.User
+
+@{
+    ViewData["Title"] = "Edit User";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="p-8 max-w-4xl mx-auto">
+    <div class="mb-8">
+        <a asp-action="Users" class="text-gray-400 hover:text-white mb-4 inline-block transition-colors">&larr; Back to Users</a>
+        <h1 class="text-3xl font-display font-bold text-white">Edit User</h1>
+        <p class="text-gray-400">@Model.Email</p>
+    </div>
+
+    <div class="bg-panel border border-white/10 rounded-2xl p-8">
+        <form asp-action="EditUser" method="post" class="space-y-6">
+            <input type="hidden" asp-for="UserId" />
+            <input type="hidden" asp-for="CreatedDate" />
+            <!-- Pass dummy password to satisfy model binding if required, or better, remove from ModelState in controller -->
+            <input type="hidden" asp-for="Password" value="dummy" /> 
+            <input type="hidden" asp-for="ConfirmPassword" value="dummy" />
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- First Name -->
+                <div>
+                    <label asp-for="FirstName" class="block text-sm font-medium text-gray-400 mb-2">First Name</label>
+                    <input asp-for="FirstName" class="w-full bg-black border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all" />
+                    <span asp-validation-for="FirstName" class="text-red-500 text-sm"></span>
+                </div>
+
+                <!-- Last Name -->
+                <div>
+                    <label asp-for="LastName" class="block text-sm font-medium text-gray-400 mb-2">Last Name</label>
+                    <input asp-for="LastName" class="w-full bg-black border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all" />
+                    <span asp-validation-for="LastName" class="text-red-500 text-sm"></span>
+                </div>
+            </div>
+
+            <!-- Email (Read Only or Editable) -->
+            <div>
+                <label asp-for="Email" class="block text-sm font-medium text-gray-400 mb-2">Email Address</label>
+                <input asp-for="Email" type="email" class="w-full bg-black border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all" />
+                <span asp-validation-for="Email" class="text-red-500 text-sm"></span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Phone -->
+                <div>
+                    <label asp-for="Phone" class="block text-sm font-medium text-gray-400 mb-2">Phone Number</label>
+                    <input asp-for="Phone" class="w-full bg-black border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all" />
+                    <span asp-validation-for="Phone" class="text-red-500 text-sm"></span>
+                </div>
+
+                <!-- Role -->
+                <div>
+                    <label asp-for="Role" class="block text-sm font-medium text-gray-400 mb-2">Role</label>
+                    <select asp-for="Role" class="w-full bg-black border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all">
+                        <option value="User">User</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Address -->
+            <div>
+                <label asp-for="Address" class="block text-sm font-medium text-gray-400 mb-2">Address</label>
+                <textarea asp-for="Address" rows="3" class="w-full bg-black border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all"></textarea>
+                <span asp-validation-for="Address" class="text-red-500 text-sm"></span>
+            </div>
+
+            <div class="pt-4 flex gap-4">
+                <button type="submit" class="flex-1 bg-accent hover:bg-opacity-90 text-white font-bold py-3 px-6 rounded-lg shadow-[0_0_20px_rgba(172,88,233,0.3)] hover:shadow-[0_0_30px_rgba(172,88,233,0.5)] transition-all transform hover:-translate-y-1">
+                    Save Changes
+                </button>
+                <a asp-action="Users" class="px-8 py-3 border border-white/20 text-white font-medium rounded-lg hover:bg-white/5 transition-colors text-center">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

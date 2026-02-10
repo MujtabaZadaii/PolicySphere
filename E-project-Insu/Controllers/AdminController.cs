@@ -136,6 +136,44 @@ namespace E_project_Insu.Controllers
             return RedirectToAction("Users");
         }
 
+        [HttpGet]
+        public IActionResult EditUser(int id)
+        {
+             if (!IsAdmin()) return RedirectToAction("Login", "Home");
+             var user = _context.Users.Find(id);
+             if (user == null) return NotFound();
+             return View(user);
+        }
+
+        [HttpPost]
+        public IActionResult EditUser(User user)
+        {
+            if (!IsAdmin()) return RedirectToAction("Login", "Home");
+            // Remove navigation properties from validation
+            ModelState.Remove("Policies");
+            ModelState.Remove("Password"); // If password change not handled here
+            ModelState.Remove("ConfirmPassword");
+
+            if (ModelState.IsValid)
+            {
+                var existing = _context.Users.Find(user.UserId);
+                if (existing != null)
+                {
+                    existing.FirstName = user.FirstName;
+                    existing.LastName = user.LastName;
+                    existing.Email = user.Email;
+                    existing.Phone = user.Phone;
+                    existing.Address = user.Address;
+                    existing.Role = user.Role;
+                    // Don't update Password or CreatedDate unless needed
+                    
+                    _context.SaveChanges();
+                }
+                return RedirectToAction("Users");
+            }
+            return View(user);
+        }
+
         public IActionResult Policies()
         {
             if (!IsAdmin()) return RedirectToAction("Login", "Home");
