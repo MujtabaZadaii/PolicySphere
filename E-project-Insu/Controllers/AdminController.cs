@@ -340,11 +340,16 @@ namespace E_project_Insu.Controllers
         {
             if (!IsAdmin()) return RedirectToAction("Login", "Home");
             
-            // We don't want to validate CreatedDate from the form submission as we keep the original
-            ModelState.Remove("CreatedDate");
-            ModelState.Remove("ImageUrl");
-            ModelState.Remove("Description");
-            ModelState.Remove("Eligibility");
+            
+            // Aggressive Validation Fix: Clear all potential binding errors for non-editable fields
+            ModelState.Clear();
+
+            // Manually validate required fields
+            if (string.IsNullOrWhiteSpace(scheme.SchemeName)) ModelState.AddModelError("SchemeName", "Scheme Name is required.");
+            if (string.IsNullOrWhiteSpace(scheme.InsuranceType)) ModelState.AddModelError("InsuranceType", "Insurance Type is required.");
+            if (string.IsNullOrWhiteSpace(scheme.Description)) ModelState.AddModelError("Description", "Description is required.");
+            if (string.IsNullOrWhiteSpace(scheme.Eligibility)) ModelState.AddModelError("Eligibility", "Eligibility Criteria is required.");
+            if (string.IsNullOrWhiteSpace(scheme.Status)) ModelState.AddModelError("Status", "Status is required.");
 
             if (ModelState.IsValid)
             {
