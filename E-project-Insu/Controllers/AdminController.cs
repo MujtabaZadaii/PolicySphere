@@ -290,7 +290,7 @@ namespace E_project_Insu.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditScheme(Scheme scheme)
+        public async Task<IActionResult> EditScheme(Scheme scheme, IFormFile schemeImage)
         {
             if (!IsAdmin()) return RedirectToAction("Login", "Home");
             if (ModelState.IsValid)
@@ -303,7 +303,25 @@ namespace E_project_Insu.Controllers
                     existing.Description = scheme.Description;
                     existing.Eligibility = scheme.Eligibility;
                     existing.Status = scheme.Status;
-                    // Preserve CreatedDate
+                    
+                    // Handle Image Upload
+                    if (schemeImage != null && schemeImage.Length > 0)
+                    {
+                        var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "schemes");
+                        if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
+
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(schemeImage.FileName);
+                        var filePath = Path.Combine(folderPath, fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await schemeImage.CopyToAsync(stream);
+                        }
+
+                        existing.ImageUrl = "/images/schemes/" + fileName;
+                    }
+                    // If no new image, keep existing one
+                    
                     _context.SaveChanges();
                 }
                 return RedirectToAction("Schemes");
