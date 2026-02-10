@@ -23,7 +23,7 @@ namespace E_project_Insu.Models
 
         public string Status { get; set; } = "Active"; // Active, Expired, Pending
 
-        public string ImageUrl { get; set; } // Path to background image
+        public string? ImageUrl { get; set; } // Path to background image
 
         // Foreign Key
         public int UserId { get; set; }

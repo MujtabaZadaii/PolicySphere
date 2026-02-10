@@ -342,6 +342,9 @@ namespace E_project_Insu.Controllers
             
             // We don't want to validate CreatedDate from the form submission as we keep the original
             ModelState.Remove("CreatedDate");
+            ModelState.Remove("ImageUrl");
+            ModelState.Remove("Description");
+            ModelState.Remove("Eligibility");
 
             if (ModelState.IsValid)
             {
