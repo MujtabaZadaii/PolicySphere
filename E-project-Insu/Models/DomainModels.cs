@@ -41,13 +41,13 @@ namespace E_project_Insu.Models
         [Required]
         public string InsuranceType { get; set; } // Life, Medical, Motor, Home
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
-        public string Eligibility { get; set; }
+        public string? Eligibility { get; set; }
 
         public string Status { get; set; } = "Active";
 
-        public string ImageUrl { get; set; } // Uploaded image path
+        public string? ImageUrl { get; set; } // Uploaded image path
 
         public DateTime CreatedDate { get; set; } = DateTime.Now;
     }
